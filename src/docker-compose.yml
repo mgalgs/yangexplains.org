@@ -1,0 +1,26 @@
+version: '3.6'
+services:
+  db:
+    image: "postgres:11.5"
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+    env_file:
+      - env_file
+  flaskapp:
+    build: .
+    env_file:
+      - env_file
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  nginx:
+    image: "nginx:1.13.5"
+    ports:
+      - "8080:80"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+    depends_on:
+      - flaskapp
+volumes:
+  dbdata:
