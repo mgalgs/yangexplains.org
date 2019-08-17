@@ -1,11 +1,17 @@
-from flask import Flask
+from flask import Flask, jsonify, render_template
+
+from .explainers import parse_explainers
+
+
 app = Flask(__name__)
+explainers = parse_explainers()
 
 
 @app.route('/')
 def view_index():
-    return 'Hello, World!'
+    return render_template('index.html')
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+@app.route('/api/questions')
+def view_api_questions():
+    return jsonify(explainers)
