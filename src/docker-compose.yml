@@ -24,7 +24,7 @@ services:
       - "8080:80"
     volumes:
       - ./conf.d:/etc/nginx/conf.d
-      - ./frontend/build:/etc/nginx/html/static
+      - ./frontend/dist:/etc/nginx/html/static
     depends_on:
       - flaskapp
 volumes:

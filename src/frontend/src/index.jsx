@@ -1,3 +1,7 @@
+import MainApp from './MainApp.jsx';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("READEYE");
+    ReactDOM.render(<MainApp />, document.getElementById('root'));
 });
