@@ -14,13 +14,17 @@ services:
       - .:/app
     depends_on:
       - db
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/code
   nginx:
     image: "nginx:1.13.5"
     ports:
       - "8080:80"
     volumes:
       - ./conf.d:/etc/nginx/conf.d
-      - ./static:/etc/nginx/html/static
+      - ./frontend/build:/etc/nginx/html/static
     depends_on:
       - flaskapp
 volumes:
