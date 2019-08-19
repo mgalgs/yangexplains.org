@@ -5,8 +5,8 @@ const testData = {
         answer: {
             videos: [{
                 videoId: "cTsEzmFamZ8",
-                start: "8:24",
-                end: "14:52"
+                start: "504",
+                end: "892"
             }],
         },
     }, {
@@ -15,8 +15,8 @@ const testData = {
         answer: {
             videos: [{
                 videoId: "cTsEzmFamZ8",
-                start: "14:51",
-                end: "15:53"
+                start: "891",
+                end: "953"
             }],
         },
     }],

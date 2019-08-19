@@ -1,24 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import YouTube from 'react-youtube';
 import storage from './storage.js';
-
-const YouTubeVideo = (props) => {
-    const { videoId, start } = props;
-    return (
-        <div>
-          <iframe width="560"
-                  height="315"
-                  src={`https://www.youtube.com/embed/${videoId}?start=${start}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen>
-          </iframe>
-          <div>
-            <tt>video: YouTube {videoId}</tt>
-          </div>
-        </div>
-    );
-};
 
 class Explainer extends React.Component {
     constructor(props) {
@@ -26,6 +9,8 @@ class Explainer extends React.Component {
         this.state = {
             explainer: null,
         };
+
+        this.onVideoReady = this.onVideoReady.bind(this);
     }
 
     async componentDidMount() {
@@ -45,15 +30,19 @@ class Explainer extends React.Component {
                 {question}
               </h3>
               {answer.videos.map((v, idx) => (
-                  <YouTubeVideo
+                  <YouTube
                       key={idx}
                       videoId={v.videoId}
-                      start={v.start}
-                  />
-              ))
-              }
+                      onReady={(e) => {this.onVideoReady(e, v);}} />
+              ))}
             </div>
         );
+    }
+
+    onVideoReady(e, video) {
+        const player = e.target;
+        player.seekTo(video.start);
+        player.playVideo();
     }
 }
 
