@@ -1,28 +1,17 @@
 import React from 'react';
 import Explainer from './Explainer.jsx';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import storage from './storage.js';
 
-const testData = {
-    explainers: [{
-        id: 1,
-        question: "How y'all payin' for it?",
-        answer: {
-            videos: [{
-                videoId: "cTsEzmFamZ8",
-                start: "8:24",
-                end: "14:52"
-            }],
-        },
-    }, {
-        id: 2,
-        question: "How will ye olde VAT affect American companies?",
-        answer: {
-            videos: [{
-                videoId: "cTsEzmFamZ8",
-                start: "14:51",
-                end: "15:53"
-            }],
-        },
-    }],
+const ExplainerById = ({ match }) => {
+    const id = parseInt(match.params.id);
+    return (
+        <div>
+          <Link to="/">Back</Link>
+          <Explainer key={id} id={id} />
+          <hr />
+        </div>
+    );
 };
 
 class MainApp extends React.Component {
@@ -32,13 +21,23 @@ class MainApp extends React.Component {
 
     render() {
         return (
-            <div>
-              <h1>Yang Explains!</h1>
-              {testData.explainers.map(e => (
-                  <Explainer key={e.id}
-                             question={e.question}
-                             answer={e.answer} />
-              ))}
+            <div className="row">
+              <div className="col-md-8 offset-md-2">
+                <h1 className="text-center">Yang Explains!</h1>
+                <Router>
+                  <div>
+                    <Route path="/q/:id" component={ExplainerById} />
+                  </div>
+
+                  <ul>
+                    {storage.getAllExplainers().map(e => (
+                        <li key={e.id}>
+                          <Link to={`/q/${e.id}`}>{e.question}</Link>
+                        </li>
+                    ))}
+                  </ul>
+                </Router>
+              </div>
             </div>
         );
     }

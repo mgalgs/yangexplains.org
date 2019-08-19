@@ -1,7 +1,9 @@
 const path = require('path');
+const runtime = require("regenerator-runtime/runtime");
 
 module.exports = {
     mode: 'development',
+    devtool: 'source-map',
     entry: './src/index.jsx',
     output: {
         filename: 'main.js',

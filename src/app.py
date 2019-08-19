@@ -8,7 +8,8 @@ explainers = parse_explainers()
 
 
 @app.route('/')
-def view_index():
+@app.route('/q/<explainerId>')
+def view_index(explainerId):
     return render_template('index.html')
 
 

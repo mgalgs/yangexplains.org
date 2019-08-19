@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import storage from './storage.js';
 
 const YouTubeVideo = (props) => {
     const { videoId, start } = props;
     return (
         <div>
-          video: {videoId}
           <iframe width="560"
                   height="315"
                   src={`https://www.youtube.com/embed/${videoId}?start=${start}`}
@@ -13,6 +13,9 @@ const YouTubeVideo = (props) => {
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen>
           </iframe>
+          <div>
+            <tt>video: YouTube {videoId}</tt>
+          </div>
         </div>
     );
 };
@@ -21,38 +24,40 @@ class Explainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsed: true,
+            explainer: null,
         };
-        this.onQuestionClick = this.onQuestionClick.bind(this);
+    }
+
+    async componentDidMount() {
+        const explainer = await storage.fetchById(this.props.id);
+        this.setState({explainer});
     }
 
     render() {
+        if (!this.state.explainer)
+            return <div>...loading...</div>;
+
+        const { question, answer } = this.state.explainer;
+
         return (
             <div>
               <h3 onClick={this.onQuestionClick}>
-                {this.props.question}
+                {question}
               </h3>
-              {this.state.collapsed ||
-               this.props.answer.videos.map((v, idx) => (
-                   <YouTubeVideo
-                       key={idx}
-                       videoId={v.videoId}
-                       start={v.start}
-                   />
-               ))
+              {answer.videos.map((v, idx) => (
+                  <YouTubeVideo
+                      key={idx}
+                      videoId={v.videoId}
+                      start={v.start}
+                  />
+              ))
               }
             </div>
         );
     }
-
-    onQuestionClick() {
-        this.setState((prevState) => ({
-            collapsed: !prevState.collapsed,
-        }));
-    }
 }
 
-Explainer.propTypes = {
+const explainerShape = {
     question: PropTypes.string.isRequired,
     answer: PropTypes.shape({
         videos: PropTypes.arrayOf(PropTypes.shape({
@@ -61,6 +66,10 @@ Explainer.propTypes = {
             videoId: PropTypes.string.isRequired,
         })),
     }).isRequired,
+};
+
+Explainer.propTypes = {
+    id: PropTypes.number.isRequired,
 };
 
 export default Explainer;
