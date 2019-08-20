@@ -9,7 +9,7 @@ explainers = parse_explainers()
 
 @app.route('/')
 @app.route('/q/<explainerId>')
-def view_index(explainerId):
+def view_index(explainerId=None):
     return render_template('index.html')
 
 
