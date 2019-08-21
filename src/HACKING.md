@@ -10,9 +10,15 @@ and create a file named `env_file` with the following content:
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=whatever_you_want
 POSTGRES_DB=flaskapp_db
+GOOGLE_OAUTH_CLIENT_ID=<redacted>
+GOOGLE_OAUTH_CLIENT_SECRET=<redacted>
 ```
 
-then start the app:
+See
+[this](https://realpython.com/flask-google-login/#creating-a-google-client)
+tutorial for creating a Google oauth app for testing.
+
+Then start the app:
 
 ```
 docker-compose up
