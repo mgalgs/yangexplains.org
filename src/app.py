@@ -13,6 +13,11 @@ def view_index(explainerId=None):
     return render_template('index.html')
 
 
+@app.route('/privacy')
+def view_privacy(explainerId=None):
+    return render_template('privacy.html')
+
+
 @app.route('/api/questions')
 def view_api_questions():
     return jsonify(explainers)
