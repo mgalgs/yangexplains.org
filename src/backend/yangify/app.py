@@ -2,12 +2,9 @@ import os
 
 from flask import Flask, jsonify, render_template
 
-from .explainers import parse_explainers
-
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
-explainers = parse_explainers()
 
 
 @app.route('/')
@@ -23,4 +20,4 @@ def view_privacy(explainerId=None):
 
 @app.route('/api/questions')
 def view_api_questions():
-    return jsonify(explainers)
+    return jsonify({'results': [1, 2, 3]})

@@ -7,11 +7,11 @@ services:
     env_file:
       - env_file
   flaskapp:
-    build: .
+    build: ./backend
     env_file:
       - env_file
     volumes:
-      - .:/app
+      - ./backend:/app
     depends_on:
       - db
   frontend:
@@ -24,7 +24,8 @@ services:
       - "8080:80"
     volumes:
       - ./conf.d:/etc/nginx/conf.d
-      - ./frontend/dist:/etc/nginx/html/static
+      - ./frontend/dist:/etc/nginx/html/static-dist
+      - ./backend/yangify/static:/etc/nginx/html/static
     depends_on:
       - flaskapp
 volumes:

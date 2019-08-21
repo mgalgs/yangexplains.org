@@ -1,8 +1,0 @@
-# Lines that start with # are ignored.
-
-Question: How will the Freedom Dividend be paid for?
-Answer: https://youtu.be/cTsEzmFamZ8 [8:24-14:52]
-# might need to split this one up     ^^^^^^^^^^
-
-Question: How will the VAT affect American companies?
-Answer: https://youtu.be/cTsEzmFamZ8 [14:51-15:53]
