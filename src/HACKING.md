@@ -7,9 +7,11 @@ cd /path/to/yangexplains.org/src
 and create a file named `env_file` with the following content:
 
 ```
+APP_SETTINGS=config.DevelopmentConfig
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=whatever_you_want
-POSTGRES_DB=flaskapp_db
+POSTGRES_HOST=postgres
+POSTGRES_DB=postgres
 GOOGLE_OAUTH_CLIENT_ID=<redacted>
 GOOGLE_OAUTH_CLIENT_SECRET=<redacted>
 ```

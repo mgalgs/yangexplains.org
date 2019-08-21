@@ -1,9 +1,12 @@
+import os
+
 from flask import Flask, jsonify, render_template
 
 from .explainers import parse_explainers
 
 
 app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
 explainers = parse_explainers()
 
 
