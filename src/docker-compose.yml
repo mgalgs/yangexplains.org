@@ -8,6 +8,7 @@ services:
       - env_file
   flaskapp:
     build: ./backend
+    user: ${CURRENT_USER}
     env_file:
       - env_file
     volumes:
@@ -15,7 +16,9 @@ services:
     depends_on:
       - db
   frontend:
-    build: ./frontend
+    image: "node:10.16.3-alpine"
+    command: ["/code/entry.sh"]
+    user: ${CURRENT_USER}
     volumes:
       - ./frontend:/code
   nginx:

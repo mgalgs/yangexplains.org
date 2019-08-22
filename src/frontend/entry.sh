@@ -1,9 +1,14 @@
 #!/bin/sh
 
-[[ -e /code/package.json ]] || {
-    echo "package.json not found. Did you volume-mount the frontend code into /code?"
+echo "have id:"
+id
+
+[[ -d /code ]] || {
+    echo "/code not found. Did you volume-mount the frontend code into /code?"
     exit 1
 }
+
+cd /code
 
 npm install
 npm run dev

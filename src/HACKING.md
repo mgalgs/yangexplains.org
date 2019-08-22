@@ -7,10 +7,10 @@ cd /path/to/yangexplains.org/src
 and create a file named `env_file` with the following content:
 
 ```
-APP_SETTINGS=config.DevelopmentConfig
+APP_SETTINGS=yangify.config.DevelopmentConfig
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=whatever_you_want
-POSTGRES_HOST=postgres
+POSTGRES_HOST=db
 POSTGRES_DB=postgres
 GOOGLE_OAUTH_CLIENT_ID=<redacted>
 GOOGLE_OAUTH_CLIENT_SECRET=<redacted>
@@ -23,16 +23,19 @@ tutorial for creating a Google oauth app for testing.
 Then start the app:
 
 ```
-docker-compose up
+CURRENT_USER=$(id -u):$(id -g) docker-compose up
 ```
+
+(we use the `CURRENT_USER` environment variable so that we can run `flask`
+and `webpack` as your current user rather than root)
 
 The app should now be running on http://localhost:5000 with hot-reloading
 of the backend and frontend code enabled.  Now just start hacking!
 
 ## Adding Python packages
 
-If you need to add a Python package, start the app with `docker-compose up`
-and then run:
+If you need to add a Python package, start the app with
+`CURRENT_USER=$(id -u):$(id -g) docker-compose up` and then run:
 
 ```
 $ docker exec src_flaskapp_1 pip install SOME_PACKAGE
@@ -44,8 +47,9 @@ $ docker exec src_flaskapp_1 sh -c "pip freeze --local > requirements.txt"
 
 ## Adding Javascript packages
 
-If you need to add a javascript package, start the app with `docker-compose
-up` and then run:
+If you need to add a javascript package, start the app with
+`CURRENT_USER=$(id -u):$(id -g) docker-compose up`
+and then run:
 
 ```
 $ docker exec src_frontend_1 npm install SOME_PACKAGE --save
