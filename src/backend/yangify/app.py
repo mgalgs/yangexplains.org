@@ -11,9 +11,15 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class User(db.Model):
-    id = db.Column(db.Text, primary_key=True)
+class GoogleUser(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    identifier = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    provider = db.Column(db.Text)
     email = db.Column(db.Text, unique=True, nullable=False)
 
 

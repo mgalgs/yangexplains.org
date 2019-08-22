@@ -29,6 +29,12 @@ CURRENT_USER=$(id -u):$(id -g) docker-compose up
 (we use the `CURRENT_USER` environment variable so that we can run `flask`
 and `webpack` as your current user rather than root)
 
+In another terminal, apply the database schema:
+
+```
+docker exec src_flaskapp_1 flask db upgrade
+```
+
 The app should now be running on http://localhost:5000 with hot-reloading
 of the backend and frontend code enabled.  Now just start hacking!
 
