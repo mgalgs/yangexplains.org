@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# trivial wrapper around docker-compose which sets the user/group in the
+# container to the current user.
+
+CURRENT_USER=$(id -u):$(id -g) docker-compose $*

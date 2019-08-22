@@ -32,11 +32,11 @@ python -c 'import secrets; print(secrets.token_urlsafe(16))'
 Then start the app:
 
 ```
-CURRENT_USER=$(id -u):$(id -g) docker-compose up
+./composectl up
 ```
 
-(we use the `CURRENT_USER` environment variable so that we can run `flask`
-and `webpack` as your current user rather than root)
+(`composectl` is a trivial wrapper around `docker-compose` which sets the
+user/group inside the container to the current user)
 
 In another terminal, apply the database schema:
 
@@ -49,8 +49,8 @@ of the backend and frontend code enabled.  Now just start hacking!
 
 ## Adding Python packages
 
-If you need to add a Python package, start the app with
-`CURRENT_USER=$(id -u):$(id -g) docker-compose up` and then run:
+If you need to add a Python package, start the app with `./composectl up`
+and then run:
 
 ```
 $ docker exec src_flaskapp_1 pip install SOME_PACKAGE
@@ -63,8 +63,7 @@ $ docker exec src_flaskapp_1 sh -c "pip freeze --local > requirements.txt"
 ## Adding Javascript packages
 
 If you need to add a javascript package, start the app with
-`CURRENT_USER=$(id -u):$(id -g) docker-compose up`
-and then run:
+`./composectl up` and then run:
 
 ```
 $ docker exec src_frontend_1 npm install SOME_PACKAGE --save

@@ -14,13 +14,19 @@
           crossorigin="anonymous">
 
     <title>Yang Explains{% block moretitle %}{% endblock %}</title>
+    <script>
+     var YangConfig = {
+         {% if current_user.is_authenticated %}
+         userId: {{ current_user.id }},
+         userEmail: "{{ current_user.email }}"
+         {% else %}
+         userId: null,
+         userEmail: null
+         {% endif %}
+     };
+    </script>
   </head>
   <body>
-    {% if current_user.is_authenticated %}
-      Hello, {{ current_user }}! <a href="/logout">Logout</a>
-    {% else %}
-      <a href="/login">Login</a>
-    {% endif %}
     {% block body %}{% endblock %}
 
     <!-- Optional JavaScript -->

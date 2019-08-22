@@ -1,37 +1,15 @@
-const testData = {
-    explainers: [{
-        id: 1,
-        question: "How y'all payin' for it?",
-        answer: {
-            videos: [{
-                videoId: "cTsEzmFamZ8",
-                start: "504",
-                end: "892"
-            }],
-        },
-    }, {
-        id: 2,
-        question: "How will ye olde VAT affect American companies?",
-        answer: {
-            videos: [{
-                videoId: "cTsEzmFamZ8",
-                start: "891",
-                end: "953"
-            }],
-        },
-    }],
-};
+import { yangGet } from './network.js';
+
+const _cache = {};
 
 const storage = {
     fetchById: async (id) => {
-        for (const explainer of testData.explainers) {
-            if (explainer.id === id)
-                return explainer;
-        }
-        return null;
+        return await yangGet(`/api/question/${id}`);
     },
-    getAllExplainers: () => {
-        return testData.explainers;
+    getAllExplainers: async () => {
+        if (!_cache.hasOwnProperty('explainers'))
+            _cache.explainers = await yangGet(`/api/questions`);
+        return _cache.explainers;
     },
 };
 

@@ -11,6 +11,7 @@ from flask import (
     render_template,
     request,
 )
+from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import (
@@ -65,6 +66,45 @@ class User(UserMixin, db.Model):
         return cls.query.filter_by(email=email).one_or_none()
 
 
+class Explainer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.Text, nullable=False, unique=True)
+
+    videos = relationship("ExplainerVideo")
+
+    @classmethod
+    def all(cls):
+        return cls.query.all()
+
+    @classmethod
+    def get(cls, explainer_id):
+        return cls.query.get(explainer_id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'question': self.question,
+            'answer': {
+                'videos': [{
+                    "videoId": video.video_id,
+                    "start": video.start,
+                    "end": video.end,
+                } for video in self.videos],
+            }
+        }
+
+
+class ExplainerVideo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    explainer_id = db.Column(db.Integer, db.ForeignKey('explainer.id'),
+                             nullable=False)
+    # one of: ['youtube']
+    video_provider = db.Column(db.Text, nullable=False)
+    video_id = db.Column(db.Text, nullable=False)
+    start = db.Column(db.Text, nullable=False)
+    end = db.Column(db.Text, nullable=False)
+
+
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
 def load_user(user_id):
@@ -76,6 +116,7 @@ def get_google_provider_cfg():
 
 
 @app.route('/')
+@app.route('/add')
 @app.route('/q/<explainerId>')
 def view_index(explainerId=None):
     return render_template('index.html')
@@ -171,6 +212,34 @@ def view_privacy(explainerId=None):
     return render_template('privacy.html')
 
 
-@app.route('/api/questions')
+@app.route('/api/questions', methods=['GET', 'POST'])
 def view_api_questions():
-    return jsonify({'results': [1, 2, 3]})
+    if request.method == 'GET':
+        return jsonify({'questions': [q.serialize() for q in Explainer.all()]})
+    elif request.method == 'POST':
+        try:
+            question = request.json['question']
+            video_id = request.json['videoId']
+            start = request.json['start']
+            end = request.json['end']
+        except KeyError:
+            return jsonify({'error': 'All fields are required'}), 400
+
+        explainer = Explainer(question=question)
+        db.session.add(explainer)
+        db.session.commit()
+        video = ExplainerVideo(
+            explainer_id=explainer.id,
+            video_provider='youtube',
+            video_id=video_id,
+            start=start,
+            end=end,
+        )
+        db.session.add(video)
+        db.session.commit()
+        return jsonify(explainer.serialize())
+
+
+@app.route('/api/question/<explainer_id>', methods=['GET'])
+def view_api_single_question(explainer_id):
+    return jsonify(Explainer.get(explainer_id).serialize())
