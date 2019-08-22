@@ -7,6 +7,7 @@ cd /path/to/yangexplains.org/src
 and create a file named `env_file` with the following content:
 
 ```
+SECRET_KEY=<redacted>
 APP_SETTINGS=yangify.config.DevelopmentConfig
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=whatever_you_want
@@ -19,6 +20,14 @@ GOOGLE_OAUTH_CLIENT_SECRET=<redacted>
 See
 [this](https://realpython.com/flask-google-login/#creating-a-google-client)
 tutorial for creating a Google oauth app for testing.
+
+You can generate a value for `SECRET_KEY` with:
+
+```
+python -c 'import secrets; print(secrets.token_urlsafe(16))'
+```
+
+(assumes `python` 3.6 or later)
 
 Then start the app:
 
