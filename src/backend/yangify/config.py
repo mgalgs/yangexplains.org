@@ -13,6 +13,11 @@ class Config(object):
         f'postgresql+psycopg2://{pguser}:{pgpassword}@{pghost}/{pgdb}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    GOOGLE_OAUTH_CLIENT_ID = os.environ["GOOGLE_OAUTH_CLIENT_ID"]
+    GOOGLE_OAUTH_CLIENT_SECRET = os.environ["GOOGLE_OAUTH_CLIENT_SECRET"]
+    GOOGLE_DISCOVERY_URL = \
+        "https://accounts.google.com/.well-known/openid-configuration"
+
 
 class ProductionConfig(Config):
     DEBUG = False
