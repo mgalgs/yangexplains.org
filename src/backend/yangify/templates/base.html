@@ -16,6 +16,11 @@
     <title>Yang Explains{% block moretitle %}{% endblock %}</title>
   </head>
   <body>
+    {% if current_user.is_authenticated %}
+      Hello, {{ current_user }}! <a href="/logout">Logout</a>
+    {% else %}
+      <a href="/login">Login</a>
+    {% endif %}
     {% block body %}{% endblock %}
 
     <!-- Optional JavaScript -->
