@@ -30,13 +30,17 @@ class AddExplainer extends React.Component {
     }
 
     async onSubmitClick() {
-        const rsp = await yangPost(this.url, {
+        const [data, rsp] = await yangPost(this.url, {
             question: this.state.question,
             videoId: this.state.videoId,
             start: this.state.start,
             end: this.state.end,
         });
-        this.props.history.push(`/q/${rsp.id}`);
+        if (!rsp.ok) {
+            alert(`Error: {data.error}`);
+            return;
+        }
+        this.props.history.push(`/q/${data.id}`);
     }
 
     render() {

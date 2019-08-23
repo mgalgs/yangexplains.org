@@ -17,11 +17,9 @@
     <script>
      var YangConfig = {
          {% if current_user.is_authenticated %}
-         userId: {{ current_user.id }},
-         userEmail: "{{ current_user.email }}"
+         user: {{ current_user.serialize()|tojson }}
          {% else %}
-         userId: null,
-         userEmail: null
+         user: null
          {% endif %}
      };
     </script>

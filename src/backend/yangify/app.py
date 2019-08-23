@@ -56,6 +56,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     provider = db.Column(db.Text)
     email = db.Column(db.Text, unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_approver = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f"<User {self.id} ({self.email})>"
 
     @classmethod
     def get(cls, user_id):
@@ -65,16 +70,35 @@ class User(UserMixin, db.Model):
     def get_by_email(cls, email):
         return cls.query.filter_by(email=email).one_or_none()
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'is_approver': self.is_approver,
+        }
+
+    def dumps(self):
+        return json.dumps(self.serialize())
+
 
 class Explainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text, nullable=False, unique=True)
+    pending = db.Column(db.Boolean, default=True, nullable=False)
 
     videos = relationship("ExplainerVideo")
 
     @classmethod
     def all(cls):
         return cls.query.all()
+
+    @classmethod
+    def all_approved(cls):
+        return cls.query.filter_by(pending=False)
+
+    @classmethod
+    def all_pending(cls):
+        return cls.query.filter_by(pending=True)
 
     @classmethod
     def get(cls, explainer_id):
@@ -84,6 +108,7 @@ class Explainer(db.Model):
         return {
             'id': self.id,
             'question': self.question,
+            'pending': self.pending,
             'answer': {
                 'videos': [{
                     "videoId": video.video_id,
@@ -116,9 +141,9 @@ def get_google_provider_cfg():
 
 
 @app.route('/')
-@app.route('/add')
-@app.route('/q/<explainerId>')
-def view_index(explainerId=None):
+@app.route('/a/<app_page>')
+@app.route('/q/<explainer_id>')
+def view_index(explainer_id=None, app_page=None):
     return render_template('index.html')
 
 
@@ -215,8 +240,17 @@ def view_privacy(explainerId=None):
 @app.route('/api/questions', methods=['GET', 'POST'])
 def view_api_questions():
     if request.method == 'GET':
-        return jsonify({'questions': [q.serialize() for q in Explainer.all()]})
+        if request.args.get('pending', False) == '1':
+            explainers = Explainer.all_pending()
+        else:
+            explainers = Explainer.all_approved()
+        return jsonify({
+            'questions': [q.serialize() for q in explainers]
+        })
     elif request.method == 'POST':
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Login required'}), 400
+
         try:
             question = request.json['question']
             video_id = request.json['videoId']
@@ -226,6 +260,8 @@ def view_api_questions():
             return jsonify({'error': 'All fields are required'}), 400
 
         explainer = Explainer(question=question)
+        if current_user.is_approver:
+            explainer.pending = False
         db.session.add(explainer)
         db.session.commit()
         video = ExplainerVideo(
@@ -242,4 +278,8 @@ def view_api_questions():
 
 @app.route('/api/question/<explainer_id>', methods=['GET'])
 def view_api_single_question(explainer_id):
-    return jsonify(Explainer.get(explainer_id).serialize())
+    explainer = Explainer.get(explainer_id)
+    if explainer is None or (explainer.pending
+                             and not current_user.is_approver):
+        return jsonify({'error': 'Not found'}), 404
+    return jsonify(explainer.serialize())
