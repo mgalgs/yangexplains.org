@@ -30,16 +30,20 @@ class ManageApprovals extends React.Component {
             <div>
               {activeExplainer &&
                <div>
-                 <button className="btn btn-info" onClick={() => this.setActiveExplainer(null)}>Close</button>
+                 <button className="btn btn-outline-info mb-5" onClick={() => this.setActiveExplainer(null)}>Back</button>
                  <Explainer explainer={activeExplainer} />
                </div>
               }
               <ul>
                 {this.state.pendingExplainers.map(explainer => (
-                    <li key={explainer.id}
-                        onClick={() => this.setActiveExplainer(explainer)}>
+                    <a href="#"
+                       key={explainer.id}
+                       onClick={(e) => {
+                           e.preventDefault();
+                           this.setActiveExplainer(explainer);
+                       }}>
                       {explainer.question}
-                    </li>
+                    </a>
                 ))}
               </ul>
             </div>

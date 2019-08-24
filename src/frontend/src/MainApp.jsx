@@ -19,24 +19,41 @@ const ExplainerById = ({ match }) => {
 
 const UserMenuLoggedIn = () => {
     return (
-        <ul>
-          <li>{YangConfig.user.email}</li>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/a/add">Add +</Link></li>
+        <nav className="nav">
+          <span className="m-2 navbar-text">{YangConfig.user.email}</span>
+          <Link className="m-2 btn btn-primary" to="/a/add">Add <i className="fas fa-plus-square"></i></Link>
           {YangConfig.user.is_approver &&
-           <li><Link to="/a/approvals">Approvals</Link></li>
+           <Link className="m-2 btn btn-secondary" to="/a/approvals">Approvals</Link>
           }
-          <li><a href="/logout">Logout</a></li>
-        </ul>
+          <a className="m-2 btn btn-outline-info" href="/logout">Logout</a>
+        </nav>
     );
 };
 
 const UserMenuAnon = () => {
-    return <div><a href="/login">Login</a></div>;
+    return <a className="btn btn-outline-info" href="/login">Login</a>;
 };
 
 const WeirdUrl = () => {
     return <h5>You appear to be lost, wandering in the wilderness. Go <a href="/">home</a>?</h5>;
+};
+
+const Nav = () => {
+    return (
+        <header className="py-3 yang-header mb-5">
+          <div className="row flex-nowrap justify-content-between align-items-center">
+            <div className="col-4 pt-1"></div>
+            <div className="col-4 text-center">
+              <Link to="/">
+                <img style={{maxWidth: "100px", maxHeight: "100px"}} src="/static/yangexplains_logo.png" />
+              </Link>
+            </div>
+            <div className="col-4 d-flex justify-content-end align-items-center">
+              {YangConfig.user ? <UserMenuLoggedIn /> : <UserMenuAnon />}
+            </div>
+          </div>
+        </header>
+    );
 };
 
 class MainApp extends React.Component {
@@ -46,23 +63,21 @@ class MainApp extends React.Component {
 
     render() {
         return (
-            <div className="row">
-              <div className="col-md-8 offset-md-2">
-                <h1 className="text-center">Yang Explains!</h1>
-                <Router>
-                  <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/q/:id" component={ExplainerById} />
-                    <Route exact path="/a/add" component={AddExplainer} />
-                    <Route exact path="/a/approvals" component={ManageApprovals} />
-                    <Route component={WeirdUrl} />
-                  </Switch>
-
-                  <div style={{float: "right"}}>
-                    {YangConfig.user ? <UserMenuLoggedIn /> : <UserMenuAnon />}
+            <div>
+              <Router>
+                <Nav />
+                <div className="row">
+                  <div className="col-6 offset-3">
+                    <Switch>
+                      <Route exact path="/" component={Home} />
+                      <Route exact path="/q/:id" component={ExplainerById} />
+                      <Route exact path="/a/add" component={AddExplainer} />
+                      <Route exact path="/a/approvals" component={ManageApprovals} />
+                      <Route component={WeirdUrl} />
+                    </Switch>
                   </div>
-                </Router>
-              </div>
+                </div>
+              </Router>
             </div>
         );
     }

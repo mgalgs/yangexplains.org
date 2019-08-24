@@ -52,7 +52,8 @@ class Explainer extends React.Component {
               {explainer.pending &&
                <div className="alert alert-info">
                  This explainer is PENDING
-                 <button onClick={this.onApproveClick}>Approve</button>
+                 <button className="btn btn-success mx-5"
+                         onClick={this.onApproveClick}>Approve</button>
                </div>
               }
               <h3 onClick={this.onQuestionClick}>

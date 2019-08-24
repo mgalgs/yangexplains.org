@@ -13,6 +13,8 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 
+    <script src="https://kit.fontawesome.com/e183d99316.js"></script>
+
     <title>Yang Explains{% block moretitle %}{% endblock %}</title>
     <script>
      var YangConfig = {
@@ -23,6 +25,20 @@
          {% endif %}
      };
     </script>
+
+    <style>
+     /* only the most hardcore of gangsters put their styles in style tags */
+     .bg-blue-brand {
+         background-color: rgb(20, 46, 123);
+     }
+     .bg-red-brand {
+         background-color: #da344b;
+     }
+     .yang-header {
+         line-height: 1;
+         border-bottom: 1px solid #e5e5e5;
+     }
+    </style>
   </head>
   <body>
     {% block body %}{% endblock %}
