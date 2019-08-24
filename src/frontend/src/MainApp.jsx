@@ -39,7 +39,27 @@ const WeirdUrl = () => {
     return <h5>You appear to be lost, wandering in the wilderness. Go <a href="/">home</a>?</h5>;
 };
 
-class SiteHeader extends React.Component {
+const SiteHeader = () => {
+    return (
+        <div>
+          <header className="py-3 yang-header mb-5 pr-3">
+            <div className="row flex-nowrap justify-content-between align-items-center">
+              <div className="col-4 pt-1"></div>
+              <div className="col-4 text-center">
+                <Link to="/">
+                  <img style={{maxWidth: "100px", maxHeight: "100px"}} src="/static/yangexplains_logo.png" />
+                </Link>
+              </div>
+              <div className="col-4 d-flex justify-content-end align-items-center">
+                {YangConfig.user ? <UserMenuLoggedIn /> : <UserMenuAnon />}
+              </div>
+            </div>
+          </header>
+        </div>
+    );
+};
+
+class SiteSearch extends React.Component {
     constructor(props) {
         super(props);
 
@@ -90,36 +110,19 @@ class SiteHeader extends React.Component {
             onChange: this.onSearchChange,
         };
 
-        return (
-            <div>
-              <header className="py-3 yang-header mb-5 pr-3">
-                <div className="row flex-nowrap justify-content-between align-items-center">
-                  <div className="col-4 pt-1"></div>
-                  <div className="col-4 text-center">
-                    <Link to="/">
-                      <img style={{maxWidth: "100px", maxHeight: "100px"}} src="/static/yangexplains_logo.png" />
-                    </Link>
-                  </div>
-                  <div className="col-4 d-flex justify-content-end align-items-center">
-                    {YangConfig.user ? <UserMenuLoggedIn /> : <UserMenuAnon />}
-                  </div>
-                </div>
-              </header>
-              <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                  onSuggestionSelected={this.onSuggestionSelected}
-                  getSuggestionValue={explainer => explainer.question}
-                  renderSuggestion={explainer => <div>{explainer.question}</div> }
-                  inputProps={inputProps}
-              />
-            </div>
-        );
+        return <Autosuggest
+                   suggestions={suggestions}
+                   onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                   onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                   onSuggestionSelected={this.onSuggestionSelected}
+                   getSuggestionValue={explainer => explainer.question}
+                   renderSuggestion={explainer => <div>{explainer.question}</div> }
+                   inputProps={inputProps}
+        />;
     }
 }
 
-const SiteHeaderWithRouter = withRouter(SiteHeader);
+const SiteSearchWithRouter = withRouter(SiteSearch);
 
 class MainApp extends React.Component {
     constructor(props) {
@@ -141,9 +144,12 @@ class MainApp extends React.Component {
         return (
             <div>
               <Router>
-                <SiteHeaderWithRouter explainers={this.state.explainers} />
+                <SiteHeader />
                 <div className="row">
                   <div className="col-6 offset-3">
+                    <div className="d-flex justify-content-center">
+                      <SiteSearchWithRouter explainers={this.state.explainers} />
+                    </div>
                     <Switch>
                       <Route exact path="/" component={Home} />
                       <Route exact path="/q/:id" component={ExplainerById} />

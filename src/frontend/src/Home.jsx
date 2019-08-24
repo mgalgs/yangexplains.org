@@ -20,6 +20,8 @@ class Home extends React.Component {
     render() {
         return (
             <div>
+              <hr />
+              <h5>Browse all questions</h5>
               <ul>
                 {this.state.explainers.map(explainer => (
                     <li key={explainer.id}>
