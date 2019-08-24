@@ -85,6 +85,8 @@ class Explainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text, nullable=False, unique=True)
     pending = db.Column(db.Boolean, default=True, nullable=False)
+    submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+                             nullable=False)
 
     videos = relationship("ExplainerVideo")
 
@@ -259,7 +261,7 @@ def view_api_questions():
         except KeyError:
             return jsonify({'error': 'All fields are required'}), 400
 
-        explainer = Explainer(question=question)
+        explainer = Explainer(question=question, submitter_id=current_user.id)
         if current_user.is_approver:
             explainer.pending = False
         db.session.add(explainer)
@@ -276,10 +278,22 @@ def view_api_questions():
         return jsonify(explainer.serialize())
 
 
-@app.route('/api/question/<explainer_id>', methods=['GET'])
+@app.route('/api/question/<explainer_id>', methods=['GET', 'POST'])
 def view_api_single_question(explainer_id):
     explainer = Explainer.get(explainer_id)
-    if explainer is None or (explainer.pending
-                             and not current_user.is_approver):
-        return jsonify({'error': 'Not found'}), 404
-    return jsonify(explainer.serialize())
+    if request.method == 'GET':
+        if explainer is None or (
+                explainer.pending
+                and not current_user.is_approver
+                and not explainer.submitter_id == current_user.id
+        ):
+            return jsonify({'error': 'Not found'}), 404
+        return jsonify(explainer.serialize())
+    elif request.method == 'POST':
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Login required'}), 400
+        if not current_user.is_approver:
+            return jsonify({'error': 'Must be an approver for that'}), 400
+        explainer.pending = False
+        db.session.commit()
+        return jsonify({'message': 'Success'})

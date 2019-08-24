@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
+import { withRouter } from "react-router";
 import storage from './storage.js';
+import { yangPost } from './network.js';
 import { explainerShape } from './shapes.js';
 
 class Explainer extends React.Component {
@@ -52,8 +54,10 @@ class Explainer extends React.Component {
               {explainer.pending &&
                <div className="alert alert-info">
                  This explainer is PENDING
+                 {YangConfig.user.is_approver &&
                  <button className="btn btn-success mx-5"
                          onClick={this.onApproveClick}>Approve</button>
+                 }
                </div>
               }
               <h3 onClick={this.onQuestionClick}>
@@ -75,8 +79,14 @@ class Explainer extends React.Component {
         player.playVideo();
     }
 
-    onApproveClick() {
-        alert("TODO!");
+    async onApproveClick(explainer) {
+        const eid = this.state.explainer.id;
+        const [data, rsp] = await yangPost(`/api/question/${eid}`);
+        if (!rsp.ok) {
+            alert("Something went wrong, please try again");
+            return;
+        }
+        this.props.history.push(`/q/${eid}`);
     }
 }
 
@@ -86,4 +96,4 @@ Explainer.propTypes = {
     explainer: explainerShape,
 };
 
-export default Explainer;
+export default withRouter(Explainer);

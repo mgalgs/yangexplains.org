@@ -40,7 +40,7 @@ const WeirdUrl = () => {
 
 const Nav = () => {
     return (
-        <header className="py-3 yang-header mb-5">
+        <header className="py-3 yang-header mb-5 pr-3">
           <div className="row flex-nowrap justify-content-between align-items-center">
             <div className="col-4 pt-1"></div>
             <div className="col-4 text-center">
