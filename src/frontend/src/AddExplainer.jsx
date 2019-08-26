@@ -2,6 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { yangPost } from './network.js';
 
+/**
+ * Normalizes input to be seconds only.
+ * Examples:
+ *   - 1:50 => 110
+ *   - 150 => 150
+ */
+const normalizeVideoTime = (time) => {
+    const parts = time.split(":");
+    switch (parts.length) {
+    case 1:
+        return time;
+    case 2:
+        const minutes = parseInt(parts[0], 10);
+        const seconds = parseInt(parts[1], 10);
+        const totalSeconds = (minutes * 60) + seconds;
+        return totalSeconds.toString();
+    default:
+        throw "Unhandled time format";
+    }
+};
+
 class AddExplainer extends React.Component {
     constructor(props) {
         super(props);
@@ -30,11 +51,13 @@ class AddExplainer extends React.Component {
     }
 
     async onSubmitClick() {
+        const start = normalizeVideoTime(this.state.start);
+        const end = normalizeVideoTime(this.state.end);
         const [data, rsp] = await yangPost(this.url, {
             question: this.state.question,
             videoId: this.state.videoId,
-            start: this.state.start,
-            end: this.state.end,
+            start,
+            end,
         });
         if (!rsp.ok) {
             alert(`Error: {data.error}`);
@@ -64,22 +87,22 @@ class AddExplainer extends React.Component {
                        placeholder="Example: cTsEzmFamZ8" />
               </div>
               <div className="form-group">
-                <label>Start time (seconds)</label>
+                <label>Start time code</label>
                 <input name="start"
                        value={this.state.start}
                        onChange={this.handleInputChange}
                        type="text"
                        className="form-control"
-                       placeholder="Example: 504" />
+                       placeholder="1:50" />
               </div>
               <div className="form-group">
-                <label>End time (seconds)</label>
+                <label>End time code</label>
                 <input name="end"
                        value={this.state.end}
                        onChange={this.handleInputChange}
                        type="text"
                        className="form-control"
-                       placeholder="Example: 892" />
+                       placeholder="2:40" />
               </div>
               <button type="button" className="btn btn-info" onClick={this.onSubmitClick}>Submit</button>
             </div>
