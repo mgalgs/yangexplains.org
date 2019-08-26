@@ -41,7 +41,7 @@ user/group inside the container to the current user)
 In another terminal, apply the database schema:
 
 ```
-docker exec src_flaskapp_1 flask db upgrade
+docker exec src_flaskapp_1 sh -c "cd /app/yangify; flask db upgrade"
 ```
 
 The app should now be running on http://localhost:5000 with hot-reloading
