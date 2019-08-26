@@ -155,10 +155,15 @@ def login():
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
-    base_url = app.config.get('SITE_BASE_URL') or request.base_url
+    base_url = app.config.get('SITE_BASE_URL')
+    if base_url:
+        redirect_url += '/login/callback'
+    else:
+        redirect_url = request.base_url + "/callback"
+
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=base_url + "/callback",
+        redirect_uri=redirect_url,
         scope=["openid", "email", "profile"],
     )
     return redirect(request_uri)
