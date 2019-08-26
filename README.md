@@ -5,4 +5,4 @@ questions and listen to Yang himself give a response.
 
 ### Contributing
 
-If you'd like to add a new question and answer please see (TODO!).
+See [src/HACKING.md](src/HACKING.md).
