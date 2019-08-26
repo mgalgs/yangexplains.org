@@ -157,9 +157,9 @@ def login():
 
     base_url = app.config.get('SITE_BASE_URL')
     if base_url:
-        redirect_url += '/login/callback'
+        redirect_url = f"{base_url}/login/callback"
     else:
-        redirect_url = request.base_url + "/callback"
+        redirect_url = f"{request.base_url}/callback"
 
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
