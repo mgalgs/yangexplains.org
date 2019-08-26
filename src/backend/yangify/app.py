@@ -179,13 +179,14 @@ def callback():
     google_provider_cfg = get_google_provider_cfg()
     token_endpoint = google_provider_cfg["token_endpoint"]
 
-    redirect_url = get_site_url('/login/callback')
+    redirect_url = get_site_url(request.path)
+    auth_resp = get_site_url(request.full_path)
     # Prepare and send a request to get tokens! Yay tokens!
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
-        authorization_response=request.url,
+        authorization_response=auth_resp,
         redirect_url=redirect_url,
-        code=code
+        code=code,
     )
     client_id = app.config['GOOGLE_OAUTH_CLIENT_ID']
     client_secret = app.config['GOOGLE_OAUTH_CLIENT_SECRET']
