@@ -44,7 +44,7 @@ In another terminal, apply the database schema:
 docker exec src_flaskapp_1 sh -c "cd /app/yangify; flask db upgrade"
 ```
 
-The app should now be running on http://localhost:5000 with hot-reloading
+The app should now be running on http://localhost:8080 with hot-reloading
 of the backend and frontend code enabled.  Now just start hacking!
 
 ## Adding Python packages
