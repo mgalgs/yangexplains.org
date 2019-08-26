@@ -149,17 +149,20 @@ def view_index(explainer_id=None, app_page=None):
     return render_template('index.html')
 
 
+def get_site_url(path):
+    base_url = app.config.get('SITE_BASE_URL')
+    if not base_url:
+        base_url = request.base_url[:-len(request.path)]
+    return f"{base_url}{path}"
+
+
 # google login stuff based on https://realpython.com/flask-google-login/
 @app.route("/login")
 def login():
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
-    base_url = app.config.get('SITE_BASE_URL')
-    if base_url:
-        redirect_url = f"{base_url}/login/callback"
-    else:
-        redirect_url = f"{request.base_url}/callback"
+    redirect_url = get_site_url('/login/callback')
 
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
