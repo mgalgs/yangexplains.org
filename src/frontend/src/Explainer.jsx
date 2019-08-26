@@ -55,8 +55,8 @@ class Explainer extends React.Component {
                <div className="alert alert-info">
                  This explainer is PENDING
                  {YangConfig.user.is_approver &&
-                 <button className="btn btn-success mx-5"
-                         onClick={this.onApproveClick}>Approve</button>
+                  <button className="btn btn-success mx-5"
+                          onClick={this.onApproveClick}>Approve</button>
                  }
                </div>
               }
