@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-100">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -34,8 +34,19 @@
     <link rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/autosuggest.css">
   </head>
-  <body>
-    <div class="container-fluid">{% block body %}{% endblock %}</div>
+  <body class="d-flex flex-column h-100">
+    <main role="main" class="flex-shrink-0">
+      <div class="container-fluid">{% block body %}{% endblock %}</div>
+    </main>
+
+    <footer class="footer mt-auto py-3">
+      <div class="container text-center">
+        <span class="text-muted">
+          <a target="_blank"
+             href="https://github.com/mgalgs/yangexplains.org">About</a>
+        </span>
+      </div>
+    </footer>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
