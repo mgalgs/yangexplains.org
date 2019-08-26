@@ -5,7 +5,7 @@ export PYTHONPATH=/app
 
 PORT=${PORT:-5000}
 HOST=${HOST:-0.0.0.0}
-NUM_WORKERS=${NUM_WORKERS:-$(nproc)}
+NUM_WORKERS=${NUM_WORKERS:-$(expr $(nproc) '*' 2)}
 
 if [[ $FLASK_ENV = development ]]; then
     cd /app/yangify
