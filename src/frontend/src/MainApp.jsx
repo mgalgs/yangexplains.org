@@ -69,8 +69,8 @@ class SiteSearch extends React.Component {
         const { value, suggestions } = this.state;
 
         const inputProps = {
-            placeholder: "Search",
             value,
+            placeholder: "Ask Yang a question",
             onChange: this.onSearchChange,
         };
 
