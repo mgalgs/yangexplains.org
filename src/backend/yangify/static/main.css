@@ -20,3 +20,8 @@ a.yang-center-header:hover {
     padding: 0 0.2em;
     border-radius: 1em;
 }
+@media (max-width: 720px) {
+    .yang-center-header {
+        font-size: 1em;
+    }
+}
