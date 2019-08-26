@@ -13,9 +13,14 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 
+    <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/e183d99316.js"></script>
 
+    <!-- some webfonts -->
+    <link href="https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap" rel="stylesheet">
+
     <title>Yang Explains{% block moretitle %}{% endblock %}</title>
+
     <script>
      var YangConfig = {
          {% if current_user.is_authenticated %}
@@ -26,19 +31,7 @@
      };
     </script>
 
-    <style>
-     /* only the most hardcore of gangsters put their styles in style tags */
-     .bg-blue-brand {
-         background-color: rgb(20, 46, 123);
-     }
-     .bg-red-brand {
-         background-color: #da344b;
-     }
-     .yang-header {
-         line-height: 1;
-         border-bottom: 1px solid #e5e5e5;
-     }
-    </style>
+    <link rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/autosuggest.css">
   </head>
   <body>

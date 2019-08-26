@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch, withRouter } from "react-router-dom";
 import Autosuggest from 'react-autosuggest';
+import SiteHeader from './SiteHeader.jsx';
 import Home from './Home.jsx';
 import Explainer from './Explainer.jsx';
 import AddExplainer from './AddExplainer.jsx';
@@ -18,45 +19,8 @@ const ExplainerById = ({ match }) => {
     );
 };
 
-const UserMenuLoggedIn = () => {
-    return (
-        <nav className="nav">
-          <span className="m-2 navbar-text">{YangConfig.user.email}</span>
-          <Link className="m-2 btn btn-primary" to="/a/add">Add <i className="fas fa-plus-square"></i></Link>
-          {YangConfig.user.is_approver &&
-           <Link className="m-2 btn btn-secondary" to="/a/approvals">Approvals</Link>
-          }
-          <a className="m-2 btn btn-outline-info" href="/logout">Logout</a>
-        </nav>
-    );
-};
-
-const UserMenuAnon = () => {
-    return <a className="btn btn-outline-info" href="/login">Login</a>;
-};
-
 const WeirdUrl = () => {
     return <h5>You appear to be lost, wandering in the wilderness. Go <a href="/">home</a>?</h5>;
-};
-
-const SiteHeader = () => {
-    return (
-        <div>
-          <header className="py-3 yang-header mb-5 pr-3">
-            <div className="row flex-nowrap justify-content-between align-items-center">
-              <div className="col-4 pt-1"></div>
-              <div className="col-4 text-center">
-                <Link to="/">
-                  <img style={{maxWidth: "100px", maxHeight: "100px"}} src="/static/yangexplains_logo.png" />
-                </Link>
-              </div>
-              <div className="col-4 d-flex justify-content-end align-items-center">
-                {YangConfig.user ? <UserMenuLoggedIn /> : <UserMenuAnon />}
-              </div>
-            </div>
-          </header>
-        </div>
-    );
 };
 
 class SiteSearch extends React.Component {
