@@ -8,9 +8,11 @@ HOST=${HOST:-0.0.0.0}
 NUM_WORKERS=${NUM_WORKERS:-$(expr $(nproc) '*' 2)}
 
 if [[ $FLASK_ENV = development ]]; then
+    export APP_SETTINGS=yangify.config.DevelopmentConfig
     cd /app/yangify
     flask run --host=$HOST --port $PORT
 else
+    export APP_SETTINGS=yangify.config.ProductionConfig
     cd /app
     gunicorn yangify.app:app \
              --bind $HOST:$PORT \

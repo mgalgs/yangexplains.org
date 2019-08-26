@@ -8,7 +8,7 @@ and create a file named `env_file` with the following content:
 
 ```
 SECRET_KEY=<redacted>
-APP_SETTINGS=yangify.config.DevelopmentConfig
+FLASK_ENV=development
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=whatever_you_want
 POSTGRES_HOST=db
