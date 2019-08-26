@@ -5,7 +5,6 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     DEBUG = False
     TESTING = False
-    SITE_BASE_URL = os.environ.get('SITE_BASE_URL')
 
     pguser = os.environ['POSTGRES_USER']
     pgpassword = os.environ['POSTGRES_PASSWORD']
@@ -23,6 +22,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEBUG = False
+    PREFERRED_URL_SCHEME = 'https'
 
 
 class DevelopmentConfig(Config):
