@@ -2,5 +2,19 @@
 
 export FLASK_ENV=${FLASK_ENV:-development}
 export PYTHONPATH=/app
-cd /app/yangify
-flask run --host=0.0.0.0
+
+PORT=${PORT:-5000}
+HOST=${HOST:-0.0.0.0}
+NUM_WORKERS=${NUM_WORKERS:-$(nproc)}
+
+if [[ $FLASK_ENV = development ]]; then
+    cd /app/yangify
+    flask run --host=$HOST --port $PORT
+else
+    cd /app
+    gunicorn yangify.app:app \
+             --bind $HOST:$PORT \
+             --workers $NUM_WORKERS \
+             --max-requests 500 \
+             --max-requests-jitter 100
+fi
