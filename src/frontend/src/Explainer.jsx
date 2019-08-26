@@ -66,6 +66,8 @@ class Explainer extends React.Component {
               {answer.videos.map((v, idx) => (
                   <YouTube
                       key={idx}
+                      className="embed-responsive-item"
+                      containerClassName="embed-responsive embed-responsive-16by9"
                       videoId={v.videoId}
                       onReady={(e) => {this.onVideoReady(e, v);}} />
               ))}
