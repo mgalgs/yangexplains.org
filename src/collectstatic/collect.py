@@ -42,14 +42,11 @@ def process_file(fpath):
     new_nonhashed_path = os.path.join(OUTPUT_BASEDIR, basedir, fname)
     newdir = os.path.split(newpath)[0]
     pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
-    if os.path.exists(newpath) and os.path.exists(new_nonhashed_path):
-        # nothing new here, skip
-        return False, (fpath, newpath)
     shutil.copyfile(fpath, newpath)
     shutil.copyfile(fpath, new_nonhashed_path)
-    print(f"{fpath} => {newpath}")
-    print(f"{fpath} => {new_nonhashed_path}")
-    return True, (fpath, newpath)
+    dbg(f"{fpath} => {newpath}")
+    dbg(f"{fpath} => {new_nonhashed_path}")
+    return (fpath, newpath)
 
 
 def write_manifest(processed_files):
@@ -62,13 +59,12 @@ def write_manifest(processed_files):
     outfile = os.path.join(OUTPUT_BASEDIR, "staticfiles.json")
     with open(outfile, "w") as f:
         f.write(json.dumps(data))
-    print(f"Wrote {len(processed_files)} entries to {outfile}")
+    dbg(f"Wrote {len(processed_files)} entries to {outfile}")
 
 
 def collectstatic():
     while True:
         processed_files = []
-        didwrite = False
         dbg("Collecting statics")
         for (dirpath, dirnames, filenames) in os.walk(INPUT_BASEDIR):
             for fname in filenames:
@@ -77,12 +73,9 @@ def collectstatic():
                     dbg(f"Skipping non-extensioned file {fname}")
                     continue
                 fpath = os.path.join(dirpath, fname)
-                wrote, newfile = process_file(fpath)
+                newfile = process_file(fpath)
                 processed_files.append(newfile)
-                if wrote:
-                    didwrite = True
-        if didwrite:
-            write_manifest(processed_files)
+        write_manifest(processed_files)
         time.sleep(5)
 
 
