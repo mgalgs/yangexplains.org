@@ -110,7 +110,7 @@ class MainApp extends React.Component {
               <Router>
                 <SiteHeader />
                 <div className="row">
-                  <div className="col-6 offset-3">
+                  <div className="col-md-6 offset-md-3">
                     <div className="d-flex justify-content-center">
                       <SiteSearchWithRouter explainers={this.state.explainers} />
                     </div>
