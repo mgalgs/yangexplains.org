@@ -1,8 +1,21 @@
 #!/bin/bash
 
 # trivial wrapper around docker-compose which sets the user/group in the
-# container to the current user.
+# container to the current user and also sets which docker-compose files to
+# use (based on the value of FLASK_ENV in env_file).
 
 cd $(dirname $0)
 
-CURRENT_USER=$(id -u):$(id -g) docker-compose $*
+id_dev=no
+grep -q "FLASK_ENV=development" env_file
+[[ $? -eq 0 ]] && is_dev=yes
+
+compose_files="-f ./docker-compose.yml"
+if [[ $is_dev = yes ]]; then
+    compose_files="$compose_files -f ./docker-compose-development.yml"
+else
+    compose_files="$compose_files -f ./docker-compose-production.yml"
+fi
+
+set -o xtrace
+CURRENT_USER=$(id -u):$(id -g) docker-compose $compose_files $*

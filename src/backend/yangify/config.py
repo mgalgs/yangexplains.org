@@ -6,9 +6,6 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SITE_BASE_URL = os.environ.get('SITE_BASE_URL')
-    STATICS_INTERNAL_BASE_URL = 'http://nginx/static/'
-    STATICS_URL_PREFIX = '/static'
-    STATICS_NON_HASHED = False
 
     pguser = os.environ['POSTGRES_USER']
     pgpassword = os.environ['POSTGRES_PASSWORD']
@@ -26,8 +23,8 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEBUG = False
+    STATICS_MANIFEST_URL = 'http://nginx/static/staticfiles.json'
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    STATICS_NON_HASHED = True

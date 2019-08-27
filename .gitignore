@@ -1,3 +1,5 @@
 /src/env_file
 /src/frontend/node_modules
 /src/frontend/dist
+/src/backend/yangify/static/main.js
+/src/backend/yangify/static/main.js.map

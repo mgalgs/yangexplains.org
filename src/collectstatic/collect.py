@@ -16,14 +16,9 @@ import json
 import pathlib
 
 
-INPUT_BASEDIR = '/statics'
+INPUT_BASEDIR = '/static'
 OUTPUT_BASEDIR = '/code/output'
 DEBUG = os.environ.get('DEBUG') == '1'
-
-
-def dbg(s):
-    if DEBUG:
-        print(s)
 
 
 def get_file_hash(fpath):
@@ -44,8 +39,7 @@ def process_file(fpath):
     pathlib.Path(newdir).mkdir(parents=True, exist_ok=True)
     shutil.copyfile(fpath, newpath)
     shutil.copyfile(fpath, new_nonhashed_path)
-    dbg(f"{fpath} => {newpath}")
-    dbg(f"{fpath} => {new_nonhashed_path}")
+    print(f"{fpath} => {newdir}/{basename}{{,.{hashval}}}{ext}")
     return (fpath, newpath)
 
 
@@ -59,24 +53,22 @@ def write_manifest(processed_files):
     outfile = os.path.join(OUTPUT_BASEDIR, "staticfiles.json")
     with open(outfile, "w") as f:
         f.write(json.dumps(data))
-    dbg(f"Wrote {len(processed_files)} entries to {outfile}")
+    print(f"Wrote {len(processed_files)} entries to {outfile}")
 
 
 def collectstatic():
-    while True:
-        processed_files = []
-        dbg("Collecting statics")
-        for (dirpath, dirnames, filenames) in os.walk(INPUT_BASEDIR):
-            for fname in filenames:
-                (base, ext) = os.path.splitext(fname)
-                if not ext:
-                    dbg(f"Skipping non-extensioned file {fname}")
-                    continue
-                fpath = os.path.join(dirpath, fname)
-                newfile = process_file(fpath)
-                processed_files.append(newfile)
-        write_manifest(processed_files)
-        time.sleep(5)
+    processed_files = []
+    print("Collecting statics")
+    for (dirpath, dirnames, filenames) in os.walk(INPUT_BASEDIR):
+        for fname in filenames:
+            (base, ext) = os.path.splitext(fname)
+            if not ext:
+                print(f"Skipping non-extensioned file {fname}")
+                continue
+            fpath = os.path.join(dirpath, fname)
+            newfile = process_file(fpath)
+            processed_files.append(newfile)
+    write_manifest(processed_files)
 
 
 if __name__ == "__main__":

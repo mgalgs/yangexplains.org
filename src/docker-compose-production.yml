@@ -1,0 +1,11 @@
+version: '3.6'
+services:
+  nginx:
+    image: "nginx:1.13.5"
+    ports:
+      - "8080:80"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./collectstatic/output:/etc/nginx/html/static
+    depends_on:
+      - flaskapp
