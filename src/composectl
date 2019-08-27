@@ -3,4 +3,6 @@
 # trivial wrapper around docker-compose which sets the user/group in the
 # container to the current user.
 
+cd $(dirname $0)
+
 CURRENT_USER=$(id -u):$(id -g) docker-compose $*
