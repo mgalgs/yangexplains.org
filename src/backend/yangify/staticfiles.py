@@ -22,15 +22,15 @@ from flask import Flask
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
-manifest_url = app.config.get('STATICS_MANIFEST_URL')
+MANIFEST_URL = app.config.get('STATICS_MANIFEST_URL')
 
 
 def get_statics():
-    if not manifest_url:
+    if not MANIFEST_URL:
         return
-    rsp = requests.get(manifest_url)
+    rsp = requests.get(MANIFEST_URL)
     if rsp.status_code != 200:
-        raise Exception(f"Couldn't get static manifest from {manifest_url}")
+        raise Exception(f"Couldn't get static manifest from {MANIFEST_URL}")
     return json.loads(rsp.text)
 
 
@@ -41,6 +41,12 @@ def static_url(path):
     """
     If not found in the statics manifest, returns path.
     """
-    if not manifest_url:
+    if not MANIFEST_URL:
         return path
-    return STATICS["paths"].get(path, path)
+    # the manifest doesn't contain the /static prefix
+    manifest_key = path[len(app.static_url_path):]
+    mapped = STATICS["paths"].get(manifest_key)
+    if mapped is None:
+        return path
+    url = app.static_url_path + mapped
+    return url
