@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 const videoShape = PropTypes.shape({
     start: PropTypes.string.isRequired,
-    end: PropTypes.string.isRequired,
+    end: PropTypes.string,
     videoId: PropTypes.string.isRequired,
 });
 
