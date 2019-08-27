@@ -29,3 +29,4 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    STATICS_NON_HASHED = True

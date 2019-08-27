@@ -23,7 +23,7 @@ services:
       - ./frontend:/code
   collectstatic:
     image: "python:3.7.4-buster"
-    command: ["/code/entry.py"]
+    command: ["python", "-u", "/code/collect.py"]
     user: ${CURRENT_USER}
     volumes:
       - ./collectstatic:/code

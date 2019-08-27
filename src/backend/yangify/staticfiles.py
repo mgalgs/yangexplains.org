@@ -25,4 +25,6 @@ def static_url(path):
     """
     If not found in the statics manifest, returns the same path.
     """
-    return app.config['STATICS_URL_PREFIX'] + STATICS["paths"].get(path, path)
+    if not app.config['STATICS_NON_HASHED']:
+        path = STATICS["paths"].get(path, path)
+    return app.config['STATICS_URL_PREFIX'] + path
