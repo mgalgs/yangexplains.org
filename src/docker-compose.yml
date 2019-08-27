@@ -21,15 +21,23 @@ services:
     user: ${CURRENT_USER}
     volumes:
       - ./frontend:/code
+  collectstatic:
+    image: "python:3.7.4-buster"
+    command: ["/code/entry.py"]
+    user: ${CURRENT_USER}
+    volumes:
+      - ./collectstatic:/code
+      - ./frontend/dist:/statics/dist
+      - ./backend/yangify/static:/statics/media
   nginx:
     image: "nginx:1.13.5"
     ports:
       - "8080:80"
     volumes:
       - ./conf.d:/etc/nginx/conf.d
-      - ./frontend/dist:/etc/nginx/html/static-dist
-      - ./backend/yangify/static:/etc/nginx/html/static
+      - ./collectstatic/output:/etc/nginx/html/static
     depends_on:
       - flaskapp
+      - collectstatic
 volumes:
   dbdata:

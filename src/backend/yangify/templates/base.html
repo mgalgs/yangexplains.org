@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="shortcut icon" type="image/x-icon" href="/static/yangexplains_logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ static_url('/media/yangexplains_logo.png') }}">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet"
@@ -31,8 +31,8 @@
      };
     </script>
 
-    <link rel="stylesheet" href="/static/main.css">
-    <link rel="stylesheet" href="/static/autosuggest.css">
+    <link rel="stylesheet" href="{{ static_url('/media/main.css') }}">
+    <link rel="stylesheet" href="{{ static_url('/media/autosuggest.css') }}">
   </head>
   <body class="d-flex flex-column h-100">
     <main role="main" class="flex-shrink-0">
@@ -60,6 +60,6 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
 
-    <script src="/static-dist/main.js"></script>
+    <script src="{{ static_url('/dist/main.js') }}"></script>
   </body>
 </html>

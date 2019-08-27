@@ -6,6 +6,8 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SITE_BASE_URL = os.environ.get('SITE_BASE_URL')
+    STATICS_INTERNAL_BASE_URL = 'http://nginx/static/'
+    STATICS_URL_PREFIX = '/static'
 
     pguser = os.environ['POSTGRES_USER']
     pgpassword = os.environ['POSTGRES_PASSWORD']

@@ -22,7 +22,7 @@ from flask_login import (
     login_user,
     logout_user,
 )
-
+from . import staticfiles
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -39,6 +39,13 @@ login_manager.init_app(app)
 
 # OAuth 2 client setup
 client = WebApplicationClient(app.config['GOOGLE_OAUTH_CLIENT_ID'])
+
+# context processors for our templates
+@app.context_processor
+def utility_processor():
+    def static_url(url):
+        return staticfiles.static_url(url)
+    return dict(static_url=static_url)
 
 
 class GoogleUser(db.Model):

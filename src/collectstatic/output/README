@@ -1,0 +1,2 @@
+This directory will be populated with static resources containing hashes in
+their filenames and a manifest file to map them to non-hashed names.
