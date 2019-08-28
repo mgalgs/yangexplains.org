@@ -112,11 +112,13 @@ class MainApp extends React.Component {
                 <div className="row">
                   <div className="col-md-6 offset-md-3">
                     <div className="row">
-                      <div className="col-2"></div>
-                      <div className="col-8 d-flex justify-content-center">
+                      <div className="col-lg-3 d-flex justify-content-center">
+                        <Link className="btn btn-outline-info btn-sm d-lg-none mb-3" to="/a/add">Add Question</Link>
+                      </div>
+                      <div className="col-lg-6 d-flex justify-content-center">
                         <SiteSearchWithRouter explainers={this.state.explainers} />
                       </div>
-                      <div className="col-2">
+                      <div className="col-lg-3 d-none d-lg-flex justify-content-center">
                         <Link className="btn btn-outline-info" to="/a/add">Add Question</Link>
                       </div>
                     </div>
