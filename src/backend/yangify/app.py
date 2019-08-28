@@ -120,10 +120,14 @@ class Explainer(db.Model):
     def get(cls, explainer_id):
         return cls.query.get(explainer_id)
 
+    def get_absolute_url(self):
+        return f"/q/{self.id}/{self.slug}"
+
     def serialize(self):
         return {
             'id': self.id,
             'question': self.question,
+            'slug': self.slug,
             'pending': self.pending,
             'answer': {
                 'videos': [{
@@ -159,14 +163,18 @@ def get_google_provider_cfg():
 @app.route('/')
 @app.route('/a/<app_page>')
 @app.route('/q/<explainer_id>')
-def view_index(explainer_id=None, app_page=None):
+@app.route('/q/<explainer_id>/<slug>')
+def view_index(explainer_id=None, app_page=None, slug=None):
     site_base_url = app.config.get('SITE_BASE_URL') or 'http://localhost:5000'
     ctx = {
         # TODO: move to context processor
         'site_base_url': site_base_url,
     }
     if explainer_id:
-        ctx['explainer'] = Explainer.get(explainer_id)
+        explainer = Explainer.get(explainer_id)
+        if slug != explainer.slug:
+            return redirect(explainer.get_absolute_url())
+        ctx['explainer'] = explainer
     return render_template('index.html', **ctx)
 
 

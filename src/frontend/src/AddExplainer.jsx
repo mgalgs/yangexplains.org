@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
+
 import { yangPost } from './network.js';
+import { getExplainerUrl } from './urls.js';
 import Explainer from './Explainer.jsx';
 
 /**
@@ -99,7 +101,7 @@ class AddExplainer extends React.Component {
             alert(`Error: {data.error}`);
             return;
         }
-        this.props.history.push(`/q/${data.id}`);
+        this.props.history.push(getExplainerUrl(data));
     }
 
     recomputePreview() {

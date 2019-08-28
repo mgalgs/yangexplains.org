@@ -8,6 +8,7 @@ import Explainer from './Explainer.jsx';
 import AddExplainer from './AddExplainer.jsx';
 import ManageApprovals from './ManageApprovals.jsx';
 import storage from './storage.js';
+import { getExplainerUrl } from './urls.js';
 
 const ExplainerById = ({ match }) => {
     const id = parseInt(match.params.id);
@@ -62,7 +63,7 @@ class SiteSearch extends React.Component {
     }
 
     onSuggestionSelected(event, { suggestion }) {
-        this.props.history.push(`/q/${suggestion.id}`);
+        this.props.history.push(getExplainerUrl(suggestion));
         this.setState({value: ''});
     }
 
@@ -136,6 +137,7 @@ class MainApp extends React.Component {
                     <Switch>
                       <Route exact path="/" component={Home} />
                       <Route exact path="/q/:id" component={ExplainerById} />
+                      <Route exact path="/q/:id/:slug" component={ExplainerById} />
                       <PrivateRoute exact path="/a/add" component={AddExplainer} />
                       <Route exact path="/a/approvals" component={ManageApprovals} />
                       <Route component={WeirdUrl} />

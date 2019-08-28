@@ -6,6 +6,7 @@ import { withRouter } from "react-router";
 
 import storage from './storage.js';
 import { yangPost } from './network.js';
+import { getExplainerUrl } from './urls.js';
 import { explainerShape } from './shapes.js';
 
 class Explainer extends React.Component {
@@ -97,7 +98,7 @@ class Explainer extends React.Component {
             alert("Something went wrong, please try again");
             return;
         }
-        this.props.history.push(`/q/${eid}`);
+        this.props.history.push(getExplainerUrl(data));
     }
 }
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import MetaTags from 'react-meta-tags';
 
 import storage from './storage.js';
+import { getExplainerUrl } from './urls.js';
 import { Link } from "react-router-dom";
 
 class Home extends React.Component {
@@ -32,7 +33,7 @@ class Home extends React.Component {
               <ul>
                 {this.state.explainers.map(explainer => (
                     <li key={explainer.id}>
-                      <Link to={`/q/${explainer.id}`}>{explainer.question}</Link>
+                      <Link to={getExplainerUrl(explainer)}>{explainer.question}</Link>
                     </li>
                 ))}
               </ul>

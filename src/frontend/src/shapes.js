@@ -8,6 +8,7 @@ const videoShape = PropTypes.shape({
 
 const explainerShape = PropTypes.shape({
     question: PropTypes.string.isRequired,
+    slug: PropTypes.string,
     answer: PropTypes.shape({
         videos: PropTypes.arrayOf(videoShape),
     }).isRequired,
