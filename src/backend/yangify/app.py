@@ -3,6 +3,7 @@ import json
 
 import requests
 from oauthlib.oauth2 import WebApplicationClient
+from slugify import slugify
 
 from flask import (
     Flask,
@@ -22,6 +23,7 @@ from flask_login import (
     login_user,
     logout_user,
 )
+
 from . import staticfiles
 
 app = Flask(__name__)
@@ -91,12 +93,16 @@ class User(UserMixin, db.Model):
 class Explainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text, nullable=False, unique=True)
-    slug = db.Column(db.Text, nullable=True)
+    slug = db.Column(db.Text, nullable=False)
     pending = db.Column(db.Boolean, default=True, nullable=False)
     submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                              nullable=False)
 
     videos = relationship("ExplainerVideo")
+
+    def __init__(self, *args, **kwargs):
+        kwargs['slug'] = slugify(kwargs['question'])
+        super().__init__(*args, **kwargs)
 
     @classmethod
     def all(cls):
