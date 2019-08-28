@@ -166,7 +166,8 @@ class AddExplainer extends React.Component {
               {this.state.explainerPreview &&
                <div>
                  <h3>Preview:</h3>
-                 <Explainer explainer={this.state.explainerPreview} />
+                 <Explainer explainer={this.state.explainerPreview}
+                            includeShareButtons={false} />
                </div>
               }
             </div>

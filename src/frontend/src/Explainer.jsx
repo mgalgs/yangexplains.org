@@ -23,19 +23,35 @@ class Explainer extends React.Component {
 
         this.onVideoReady = this.onVideoReady.bind(this);
         this.onApproveClick = this.onApproveClick.bind(this);
+        this.refreshAddThis = this.refreshAddThis.bind(this);
+    }
+
+    refreshAddThis() {
+        if (this.props.includeShareButtons
+            && typeof addthis !== 'undefined'
+            && addthis.layers.refresh) {
+            addthis.update("share", "url", getExplainerUrl(this.state.explainer));
+            addthis.update("share", "title", this.state.explainer.question);
+            addthis.layers.refresh();
+        }
     }
 
     async componentDidMount() {
-        if (this.props.explainer)
-            return;
-
-        const [data, rsp] = await storage.fetchById(this.props.id);
-        if (!rsp.ok) {
-            /* TODO: toastify! */
-            this.setState({error: data.error});
-            return;
+        if (!this.props.explainer) {
+            const [data, rsp] = await storage.fetchById(this.props.id);
+            if (!rsp.ok) {
+                /* TODO: toastify! */
+                this.setState({error: data.error});
+                return;
+            }
+            this.setState({explainer: data});
         }
-        this.setState({explainer: data});
+
+        this.refreshAddThis();
+    }
+
+    componentDidUpdate() {
+        this.refreshAddThis();
     }
 
     render() {
@@ -81,6 +97,10 @@ class Explainer extends React.Component {
                       videoId={v.videoId}
                       onReady={(e) => {this.onVideoReady(e, v);}} />
               ))}
+              {/* Go to www.addthis.com/dashboard to customize your tools */}
+              {this.props.includeShareButtons &&
+               <div className="addthis_inline_share_toolbox mt-3" />
+              }
             </div>
         );
     }
@@ -107,6 +127,11 @@ Explainer.propTypes = {
     /* one of id or explainer is required */
     id: PropTypes.number,
     explainer: explainerShape,
+    includeShareButtons: PropTypes.bool,
+};
+
+Explainer.defaultProps = {
+    includeShareButtons: true,
 };
 
 export default withRouter(Explainer);
