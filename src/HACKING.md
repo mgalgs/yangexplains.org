@@ -76,7 +76,8 @@ columns, etc.) you can generate an empty migration with:
 You'll be left with an empty migration file which you can fill in with
 custom migration code.  See
 [this](https://stackoverflow.com/q/24612395/209050) SO question for an
-example.
+example.  There's also an example in this repo at
+`backend/yangify/migrations/versions/0d917e6908da_.py`.
 
 ## Adding Python packages
 
