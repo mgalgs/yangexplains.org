@@ -1,5 +1,8 @@
 version: '3.6'
 services:
+  flaskapp:
+    environment:
+      - APP_SETTINGS=yangify.config.ProductionConfig
   nginx:
     image: "nginx:1.13.5"
     ports:
