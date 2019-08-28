@@ -24,7 +24,7 @@
       <title>Yang Explains -- {{ explainer.question }}</title>
       <meta name="description" content="Andrew Yang explains -- {{ explainer.question }}" />
       <meta property="og:title" content="Yang Explains" />
-      <meta property="og:image" content="{{ static_url('/static/yangexplains_logo.png') }}" />
+      <meta property="og:image" content="{{ site_base_url }}{{ static_url('/static/yangexplains_logo.png') }}" />
     {% else %}
       <title>Yang Explains</title>
     {% endif %}
@@ -36,7 +36,7 @@
          {% else %}
          user: null,
          {% endif %}
-         logo: "{{ static_url('/static/yangexplains_logo.png') }}"
+         logo: "{{ site_base_url }}{{ static_url('/static/yangexplains_logo.png') }}"
      };
     </script>
 

@@ -153,7 +153,11 @@ def get_google_provider_cfg():
 @app.route('/a/<app_page>')
 @app.route('/q/<explainer_id>')
 def view_index(explainer_id=None, app_page=None):
-    ctx = {}
+    site_base_url = app.config.get('SITE_BASE_URL') or 'http://localhost:5000'
+    ctx = {
+        # TODO: move to context processor
+        'site_base_url': site_base_url,
+    }
     if explainer_id:
         ctx['explainer'] = Explainer.get(explainer_id)
     return render_template('index.html', **ctx)
