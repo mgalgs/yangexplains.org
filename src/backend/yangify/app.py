@@ -5,6 +5,7 @@ import requests
 from oauthlib.oauth2 import WebApplicationClient
 from slugify import slugify
 
+import click
 from flask import (
     Flask,
     jsonify,
@@ -337,3 +338,51 @@ def view_api_single_question(explainer_id):
         explainer.pending = False
         db.session.commit()
         return jsonify(explainer.serialize())
+
+
+@app.cli.command("sync-db-from-prod")
+@click.option("--url", default="https://yangexplains.org/api/questions")
+def cmd_sync_questions_from_prod(url):
+    print(f"Will sync questions from {url}. Continue? [y/N]")
+    response = input(">>> ")
+    if not any((response == 'y',
+                response == 'Y')):
+        print("Bailing")
+        return
+
+    rsp = requests.get(url)
+    if not rsp.ok:
+        print(f"GET of {url} failed with {rsp}")
+        return
+
+    first_user = User.query.order_by(User.id).first()
+    data = json.loads(rsp.text)
+    ExplainerVideo.query.delete()
+    Explainer.query.delete()
+    db.session.commit()
+
+    nquestions = 0
+    nvideos = 0
+    for question in data['questions']:
+        explainer = Explainer(
+            question=question['question'],
+            pending=question['pending'],
+            submitter_id=first_user.id, # TODO: put submitter id in API so
+                                        # we can grab it here?
+        )
+        db.session.add(explainer)
+        db.session.commit()
+        nquestions += 1
+        for video in question['answer']['videos']:
+            video = ExplainerVideo(
+                explainer_id=explainer.id,
+                video_provider='youtube',
+                video_id=video['videoId'],
+                start=video['start'],
+                end=video['end'],
+            )
+            db.session.add(video)
+            db.session.commit()
+            nvideos += 1
+
+    print(f"Synced {nquestions} questions and {nvideos} videos from {url}")

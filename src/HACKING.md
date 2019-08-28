@@ -47,6 +47,15 @@ In another terminal, apply the database schema:
 The app should now be running on http://localhost:5000 with hot-reloading
 of the backend and frontend code enabled.  Now just start hacking!
 
+## Syncing from live
+
+After creating your database and creating at least one user, you can sync
+up your local q&a database with the live one with:
+
+```
+./composectl exec flaskapp sh -c "cd /app/yangify; flask sync-db-from-prod"
+```
+
 ## Data model changes
 
 ### Schema changes
