@@ -91,6 +91,7 @@ class User(UserMixin, db.Model):
 class Explainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text, nullable=False, unique=True)
+    slug = db.Column(db.Text, nullable=True)
     pending = db.Column(db.Boolean, default=True, nullable=False)
     submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                              nullable=False)
