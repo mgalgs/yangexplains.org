@@ -111,9 +111,16 @@ class MainApp extends React.Component {
                 <SiteHeader />
                 <div className="row">
                   <div className="col-md-6 offset-md-3">
-                    <div className="d-flex justify-content-center">
-                      <SiteSearchWithRouter explainers={this.state.explainers} />
+                    <div className="row">
+                      <div className="col-2"></div>
+                      <div className="col-8 d-flex justify-content-center">
+                        <SiteSearchWithRouter explainers={this.state.explainers} />
+                      </div>
+                      <div className="col-2">
+                        <Link className="btn btn-outline-info" to="/a/add">Add Question</Link>
+                      </div>
                     </div>
+                    <hr />
                     <Switch>
                       <Route exact path="/" component={Home} />
                       <Route exact path="/q/:id" component={ExplainerById} />
