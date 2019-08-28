@@ -49,6 +49,8 @@ of the backend and frontend code enabled.  Now just start hacking!
 
 ## Data model changes
 
+### Schema changes
+
 If you change any of the data model definitions you'll need to generate a
 migration script:
 
@@ -61,6 +63,20 @@ which you'll then need to apply with:
 ```
 ./composectl exec flaskapp sh -c "cd /app/yangify; flask db upgrade"
 ```
+
+### Data migrations
+
+If you need to perform some kind of data migration (backfilling new
+columns, etc.) you can generate an empty migration with:
+
+```
+./composectl exec flaskapp sh -c "cd /app/yangify; flask db revision"
+```
+
+You'll be left with an empty migration file which you can fill in with
+custom migration code.  See
+[this](https://stackoverflow.com/q/24612395/209050) SO question for an
+example.
 
 ## Adding Python packages
 
