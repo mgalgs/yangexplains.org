@@ -17,7 +17,6 @@ services:
       - db
   frontend:
     image: "node:10.16.3-alpine"
-    command: ["/code/entry.sh"]
     user: ${CURRENT_USER}
     volumes:
       - ./frontend:/code
