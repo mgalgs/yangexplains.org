@@ -88,6 +88,15 @@ class SiteSearch extends React.Component {
 
 const SiteSearchWithRouter = withRouter(SiteSearch);
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={(props) => {
+        if (YangConfig.user)
+            return <Component {...props} />;
+        window.location.replace("/login");
+        return null;
+    }} />
+);
+
 class MainApp extends React.Component {
     constructor(props) {
         super(props);
@@ -126,7 +135,7 @@ class MainApp extends React.Component {
                     <Switch>
                       <Route exact path="/" component={Home} />
                       <Route exact path="/q/:id" component={ExplainerById} />
-                      <Route exact path="/a/add" component={AddExplainer} />
+                      <PrivateRoute exact path="/a/add" component={AddExplainer} />
                       <Route exact path="/a/approvals" component={ManageApprovals} />
                       <Route component={WeirdUrl} />
                     </Switch>
