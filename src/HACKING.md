@@ -41,11 +41,26 @@ user/group inside the container to the current user)
 In another terminal, apply the database schema:
 
 ```
-docker exec src_flaskapp_1 sh -c "cd /app/yangify; flask db upgrade"
+./composectl exec flaskapp sh -c "cd /app/yangify; flask db upgrade"
 ```
 
 The app should now be running on http://localhost:5000 with hot-reloading
 of the backend and frontend code enabled.  Now just start hacking!
+
+## Data model changes
+
+If you change any of the data model definitions you'll need to generate a
+migration script:
+
+```
+./composectl exec flaskapp sh -c "cd /app/yangify; flask db migrate"
+```
+
+which you'll then need to apply with:
+
+```
+./composectl exec flaskapp sh -c "cd /app/yangify; flask db upgrade"
+```
 
 ## Adding Python packages
 
