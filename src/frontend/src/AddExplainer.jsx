@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { yangPost } from './network.js';
 import { getExplainerUrl } from './urls.js';
 import Explainer from './Explainer.jsx';
+import storage from './storage.js';
 
 /**
  * Normalizes input to be seconds only.
@@ -101,6 +102,7 @@ class AddExplainer extends React.Component {
             alert(`Error: {data.error}`);
             return;
         }
+        storage.invalidateCaches();
         this.props.history.push(getExplainerUrl(data));
     }
 

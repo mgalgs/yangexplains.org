@@ -18,6 +18,9 @@ const storage = {
         }
         return _cache.explainers;
     },
+    invalidateCaches: () => {
+        delete _cache.explainers;
+    },
     getPendingExplainers: async () => {
         const [data, rsp] = await yangGet(`/api/questions?pending=1`);
         if (!rsp.ok) {
