@@ -19,8 +19,15 @@
     <!-- some webfonts -->
     <link href="https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap" rel="stylesheet">
 
-    <!-- title and og tags are set in react -->
-    <title>Yang Explains</title>
+    <!-- title and og tags are set in react, but some scrapers don't execute javascript so we set them here too. -->
+    {% if explainer %}
+      <title>Yang Explains -- {{ explainer.question }}</title>
+      <meta name="description" content={`Andrew Yang explains -- ${explainer.question}`} />
+      <meta property="og:title" content="Yang Explains" />
+      <meta property="og:image" content="{{ static_url('/static/yangexplains_logo.png') }}" />
+    {% else %}
+      <title>Yang Explains</title>
+    {% endif %}
 
     <script>
      var YangConfig = {

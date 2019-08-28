@@ -153,7 +153,10 @@ def get_google_provider_cfg():
 @app.route('/a/<app_page>')
 @app.route('/q/<explainer_id>')
 def view_index(explainer_id=None, app_page=None):
-    return render_template('index.html')
+    ctx = {}
+    if explainer_id:
+        ctx['explainer'] = Explainer.get(explainer_id)
+    return render_template('index.html', **ctx)
 
 
 def get_site_url(path):
