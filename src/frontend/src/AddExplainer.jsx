@@ -121,22 +121,24 @@ class AddExplainer extends React.Component {
                 <div>
                   <Link to="/">Back</Link>
                 </div>
+                <h5>Submit a question and answer</h5>
                 <label>Question</label>
                 <input name="question"
                        value={this.state.question}
                        onChange={this.handleInputChange}
                        type="text"
-                       className="form-control" />
+                       className="form-control"
+                       placeholder="What is a VAT?" />
               </div>
               <div className="form-group">
-                <label>YouTube Video ID</label>
+                <label>YouTube Link</label>
                 <input name="videoId"
                        value={this.state.videoId}
                        onChange={this.handleInputChange}
                        onBlur={this.onVideoIdBlur}
                        type="text"
                        className="form-control"
-                       placeholder="Example: cTsEzmFamZ8" />
+                       placeholder="Example: https://youtu.be/hS9wOdenEys?t=139" />
               </div>
               <div className="form-group">
                 <label>Start time code</label>
