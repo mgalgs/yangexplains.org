@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 import { yangPost } from './network.js';
 import Explainer from './Explainer.jsx';
 
@@ -117,6 +118,9 @@ class AddExplainer extends React.Component {
         return (
             <div>
               <div className="form-group">
+                <div>
+                  <Link to="/">Back</Link>
+                </div>
                 <label>Question</label>
                 <input name="question"
                        value={this.state.question}
