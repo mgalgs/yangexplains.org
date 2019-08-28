@@ -98,6 +98,7 @@ class Explainer extends React.Component {
             alert("Something went wrong, please try again");
             return;
         }
+        storage.invalidateCaches();
         this.props.history.push(getExplainerUrl(data));
     }
 }

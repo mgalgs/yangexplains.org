@@ -336,4 +336,4 @@ def view_api_single_question(explainer_id):
             return jsonify({'error': 'Must be an approver for that'}), 400
         explainer.pending = False
         db.session.commit()
-        return jsonify({'message': 'Success'})
+        return jsonify(explainer.serialize())

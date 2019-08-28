@@ -36,14 +36,15 @@ class ManageApprovals extends React.Component {
               }
               <ul>
                 {this.state.pendingExplainers.map(explainer => (
-                    <a href="#"
-                       key={explainer.id}
-                       onClick={(e) => {
-                           e.preventDefault();
-                           this.setActiveExplainer(explainer);
-                       }}>
-                      {explainer.question}
-                    </a>
+                    <li key={explainer.id}>
+                      <a href="#"
+                         onClick={(e) => {
+                             e.preventDefault();
+                             this.setActiveExplainer(explainer);
+                         }}>
+                        {explainer.question}
+                      </a>
+                    </li>
                 ))}
               </ul>
             </div>
