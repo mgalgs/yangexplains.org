@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
+import MetaTags from 'react-meta-tags';
 import { withRouter } from "react-router";
+
 import storage from './storage.js';
 import { yangPost } from './network.js';
 import { explainerShape } from './shapes.js';
@@ -51,6 +53,13 @@ class Explainer extends React.Component {
 
         return (
             <div>
+              <MetaTags>
+                <title>Yang Explains -- {question}</title>
+                <meta name="description" content={`Andrew Yang explains -- ${question}`} />
+                <meta property="og:title" content="Yang Explains" />
+                <meta property="og:image" content={YangConfig.logo} />
+              </MetaTags>
+
               {explainer.pending &&
                <div className="alert alert-info">
                  This explainer is PENDING

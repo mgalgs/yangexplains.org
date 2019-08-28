@@ -17,6 +17,7 @@
         "react": "^16.9.0",
         "react-autosuggest": "^9.4.3",
         "react-dom": "^16.9.0",
+        "react-meta-tags": "^0.7.4",
         "react-router-dom": "^5.0.1",
         "react-youtube": "^7.9.0",
         "regenerator-runtime": "^0.13.3"
