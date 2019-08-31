@@ -4,4 +4,8 @@ const getExplainerUrl = (explainer) => {
     return `/q/${explainer.id}`;
 };
 
-export { getExplainerUrl };
+const getTagUrl = (tagtext) => {
+    return `/tag/${tagtext}`;
+};
+
+export { getExplainerUrl, getTagUrl };

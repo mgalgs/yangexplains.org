@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from "react-router-dom";
 
 import storage from './storage.js';
 import { yangPost } from './network.js';
+import { getTagUrl } from './urls.js';
 import { explainerShape } from './shapes.js';
+import TagsList from './TagsList.jsx'
 
 class ExplainerTag extends React.Component {
     constructor(props) {
@@ -63,12 +64,7 @@ class ExplainerTag extends React.Component {
         }
         return (
             <span style={{...this.props.style}}>
-              {explainer.tags.map(tag => (
-                  <Link key={tag.id}
-                        to={`/tag/${tag.text}`}
-                        style={{margin: "0 2px"}}
-                        className="badge badge-pill badge-info">{tag.text}</Link>
-              ))}
+              <TagsList tags={explainer.tags} />
               {addStuff}
             </span>
         );

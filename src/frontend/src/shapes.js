@@ -14,4 +14,9 @@ const explainerShape = PropTypes.shape({
     }).isRequired,
 });
 
-export { explainerShape, videoShape };
+const tagShape = PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+});
+
+export { explainerShape, videoShape, tagShape };
