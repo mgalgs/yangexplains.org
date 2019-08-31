@@ -113,6 +113,7 @@ class AddExplainer extends React.Component {
             explainerPreview = {
                 question,
                 answer: {videos: [{videoId, start}]},
+                tags: [],
             };
         }
         this.setState({explainerPreview});

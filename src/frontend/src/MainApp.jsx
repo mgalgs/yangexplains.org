@@ -7,6 +7,7 @@ import Home from './Home.jsx';
 import Explainer from './Explainer.jsx';
 import AddExplainer from './AddExplainer.jsx';
 import ManageApprovals from './ManageApprovals.jsx';
+import BrowseByTag from './BrowseByTag.jsx';
 import storage from './storage.js';
 import { getExplainerUrl } from './urls.js';
 
@@ -111,7 +112,7 @@ class MainApp extends React.Component {
     }
 
     async componentDidMount() {
-        const explainers = (await storage.getAllExplainers()).questions;
+        const explainers = await storage.getAllExplainers();
         this.setState({explainers});
     }
 
@@ -140,6 +141,7 @@ class MainApp extends React.Component {
                       <Route exact path="/q/:id/:slug" component={ExplainerById} />
                       <PrivateRoute exact path="/a/add" component={AddExplainer} />
                       <Route exact path="/a/approvals" component={ManageApprovals} />
+                      <Route exact path="/tag/:tagtext" component={BrowseByTag} />
                       <Route component={WeirdUrl} />
                     </Switch>
                   </div>

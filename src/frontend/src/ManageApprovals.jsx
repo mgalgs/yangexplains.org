@@ -21,7 +21,7 @@ class ManageApprovals extends React.Component {
             alert("Couldn't fetch explainers :(");
             return;
         }
-        this.setState({pendingExplainers: explainers.questions});
+        this.setState({pendingExplainers: explainers});
     }
 
     render() {

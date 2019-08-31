@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import MetaTags from 'react-meta-tags';
 
 import storage from './storage.js';
-import { getExplainerUrl } from './urls.js';
-import { Link } from "react-router-dom";
+import ExplainerList from './ExplainerList.jsx';
 
 class Home extends React.Component {
     constructor(props) {
@@ -16,27 +15,15 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        const explainers = (await storage.getAllExplainers()).questions;
+        const explainers = await storage.getAllExplainers();
         this.setState({explainers});
     }
 
     render() {
         return (
             <div>
-              <MetaTags>
-                <title>Yang Explains</title>
-                <meta name="description" content="Andrew Yang 2020" />
-                <meta property="og:title" content="Yang Explains!" />
-                <meta property="og:image" content={YangConfig.logo} />
-              </MetaTags>
               <h5>Browse all questions</h5>
-              <ul>
-                {this.state.explainers.map(explainer => (
-                    <li key={explainer.id}>
-                      <Link to={getExplainerUrl(explainer)}>{explainer.question}</Link>
-                    </li>
-                ))}
-              </ul>
+              <ExplainerList explainers={this.state.explainers} />
             </div>
         );
     }

@@ -6,6 +6,8 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SITE_BASE_URL = os.environ.get('SITE_BASE_URL')
+    # disable caching with built-in flask server
+    SEND_FILE_MAX_AGE_DEFAULT = 0
 
     pguser = os.environ['POSTGRES_USER']
     pgpassword = os.environ['POSTGRES_PASSWORD']

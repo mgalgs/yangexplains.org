@@ -8,6 +8,7 @@ import storage from './storage.js';
 import { yangPost } from './network.js';
 import { getExplainerUrl } from './urls.js';
 import { explainerShape } from './shapes.js';
+import ExplainerTags from './ExplainerTags.jsx';
 
 class Explainer extends React.Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class Explainer extends React.Component {
         this.onVideoReady = this.onVideoReady.bind(this);
         this.onApproveClick = this.onApproveClick.bind(this);
         this.refreshAddThis = this.refreshAddThis.bind(this);
+        this.onTagAdd = this.onTagAdd.bind(this);
     }
 
     refreshAddThis() {
@@ -80,7 +82,7 @@ class Explainer extends React.Component {
               {explainer.pending &&
                <div className="alert alert-info">
                  This explainer is PENDING
-                 {YangConfig.user.is_approver &&
+                 {YangConfig.isApprover &&
                   <button className="btn btn-success mx-5"
                           onClick={this.onApproveClick}>Approve</button>
                  }
@@ -97,12 +99,18 @@ class Explainer extends React.Component {
                       videoId={v.videoId}
                       onReady={(e) => {this.onVideoReady(e, v);}} />
               ))}
+              <ExplainerTags explainer={explainer}
+                             onAdd={this.onTagAdd} />
               {/* Go to www.addthis.com/dashboard to customize your tools */}
               {this.props.includeShareButtons &&
                <div className="addthis_inline_share_toolbox mt-3" />
               }
             </div>
         );
+    }
+
+    onTagAdd(explainer) {
+        this.setState({explainer});
     }
 
     onVideoReady(e, video) {
@@ -113,7 +121,8 @@ class Explainer extends React.Component {
 
     async onApproveClick(explainer) {
         const eid = this.state.explainer.id;
-        const [data, rsp] = await yangPost(`/api/question/${eid}`);
+        const [data, rsp] = await yangPost(`/api/question/${eid}`,
+                                           {action: 'approve'});
         if (!rsp.ok) {
             alert("Something went wrong, please try again");
             return;

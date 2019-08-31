@@ -51,6 +51,8 @@
          {% endif %}
          logo: "{{ site_base_url }}{{ static_url('/static/yangexplains_logo.png') }}"
      };
+     YangConfig.isApprover = YangConfig.user && YangConfig.user.is_approver;
+     YangConfig.userId = YangConfig.user && YangConfig.user.id;
     </script>
 
     <link rel="stylesheet" href="{{ static_url('/static/main.css') }}">

@@ -15,7 +15,7 @@ const UserMenuLoggedIn = () => {
                 </a>
                 <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <Link className="dropdown-item" to="/a/add">Add Question</Link>
-                  {YangConfig.user.is_approver &&
+                  {YangConfig.isApprover &&
                    <Link className="dropdown-item" to="/a/approvals">Approvals</Link>
                   }
                   <a className="dropdown-item" href="/logout">Logout</a>

@@ -1,16 +1,32 @@
 import { yangGet } from './network.js';
+import { getExplainerUrl } from './urls.js';
 
 const _cache = {};
 
+const _augmentExplainer = (explainer) => {
+    explainer.isApproverOrSubmitter = YangConfig.isApprover
+        || YangConfig.userId === explainer.submitter_id;
+    explainer.apiUrl = `/api/question/${explainer.id}`;
+    explainer.prettyUrl = getExplainerUrl(explainer);
+};
+
 const storage = {
     fetchById: async (id) => {
-        return await yangGet(`/api/question/${id}`);
+        const [data, rsp] = await yangGet(`/api/question/${id}`);
+        _augmentExplainer(data);
+        return [data, rsp];
+    },
+    augmentExplainer: (explainer) => {
+        _augmentExplainer(explainer);
     },
     getAllExplainers: async () => {
         if (!_cache.hasOwnProperty('explainers')) {
             const [data, rsp] = await yangGet(`/api/questions`);
             if (rsp.ok) {
-                _cache.explainers = data;
+                const explainers = data.questions;
+                for (const explainer of explainers)
+                    _augmentExplainer(explainer);
+                _cache.explainers = explainers;
             } else {
                 console.error("Couldn't fetch explainers :(");
                 return [];
@@ -27,7 +43,10 @@ const storage = {
             console.error("Couldn't fetch pendingExplainers :(");
             return [];
         }
-        return data;
+        const explainers = data.questions;
+        for (const explainer of explainers)
+            _augmentExplainer(explainer);
+        return explainers;
     },
 };
 

@@ -51,6 +51,16 @@ def utility_processor():
     return dict(static_url=static_url)
 
 
+def get_or_create(session, model, **kwargs):
+    instance = session.query(model).filter_by(**kwargs).first()
+    if instance:
+        return instance
+    instance = model(**kwargs)
+    session.add(instance)
+    session.commit()
+    return instance
+
+
 class GoogleUser(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     identifier = db.Column(db.Text, primary_key=True)
@@ -91,6 +101,25 @@ class User(UserMixin, db.Model):
         return json.dumps(self.serialize())
 
 
+explainer_tags_assoc = db.Table(
+    'explainer_tags',
+    db.Column('explainer_id', db.Integer, db.ForeignKey('explainer.id'),
+                             nullable=False),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), nullable=False),
+)
+
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'text': self.text
+        }
+
+
 class Explainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text, nullable=False, unique=True)
@@ -100,6 +129,8 @@ class Explainer(db.Model):
                              nullable=False)
 
     videos = relationship("ExplainerVideo")
+    tags = relationship(Tag, secondary=explainer_tags_assoc,
+                        backref="explainers")
 
     def __init__(self, *args, **kwargs):
         kwargs['slug'] = slugify(kwargs['question'])
@@ -136,7 +167,9 @@ class Explainer(db.Model):
                     "start": video.start,
                     "end": video.end,
                 } for video in self.videos],
-            }
+            },
+            'tags': [tag.serialize() for tag in self.tags],
+            'submitter_id': self.submitter_id,
         }
 
 
@@ -163,9 +196,10 @@ def get_google_provider_cfg():
 
 @app.route('/')
 @app.route('/a/<app_page>')
+@app.route('/tag/<tag>')
 @app.route('/q/<explainer_id>')
 @app.route('/q/<explainer_id>/<slug>')
-def view_index(explainer_id=None, app_page=None, slug=None):
+def view_index(explainer_id=None, app_page=None, slug=None, tag=None):
     site_base_url = app.config.get('SITE_BASE_URL') or 'http://localhost:5000'
     ctx = {
         # TODO: move to context processor
@@ -319,6 +353,22 @@ def view_api_questions():
         return jsonify(explainer.serialize())
 
 
+def handle_question_approve(explainer):
+    explainer.pending = False
+    db.session.commit()
+    return jsonify(explainer.serialize())
+
+
+def handle_question_add_tag(explainer):
+    tagtext = request.json.get("text")
+    if not tagtext:
+        return jsonify({'error': 'text is required'}), 400
+    tag = get_or_create(db.session, Tag, text=tagtext)
+    tag.explainers.append(explainer)
+    db.session.commit()
+    return jsonify(explainer.serialize())
+
+
 @app.route('/api/question/<explainer_id>', methods=['GET', 'POST'])
 def view_api_single_question(explainer_id):
     explainer = Explainer.get(explainer_id)
@@ -331,13 +381,23 @@ def view_api_single_question(explainer_id):
             return jsonify({'error': 'Not found'}), 404
         return jsonify(explainer.serialize())
     elif request.method == 'POST':
+        # to be able to modify an Explainer, you need to be an approver or
+        # the submitter.
         if not current_user.is_authenticated:
             return jsonify({'error': 'Login required'}), 400
-        if not current_user.is_approver:
-            return jsonify({'error': 'Must be an approver for that'}), 400
-        explainer.pending = False
-        db.session.commit()
-        return jsonify(explainer.serialize())
+        if not any((current_user.is_approver,
+                    current_user.id == explainer.submitter_id)):
+            return jsonify({
+                'error': 'Must be an approver or the submitter for that',
+            }), 400
+
+        action = request.json.get('action')
+        if action == 'approve':
+            return handle_question_approve(explainer)
+        elif action == 'add_tag':
+            return handle_question_add_tag(explainer)
+        else:
+            return jsonify({'error': 'Unsupported action'}), 400
 
 
 @app.cli.command("sync-db-from-prod")
