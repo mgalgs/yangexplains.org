@@ -127,10 +127,15 @@ class Explainer(db.Model):
     pending = db.Column(db.Boolean, default=True, nullable=False)
     submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'),
                              nullable=False)
+    views = db.Column(db.Integer, default=0, nullable=False)
 
     videos = relationship("ExplainerVideo")
     tags = relationship(Tag, secondary=explainer_tags_assoc,
                         backref="explainers")
+
+    __mapper_args__ = {
+        "order_by": views.desc(),
+    }
 
     def __init__(self, *args, **kwargs):
         kwargs['slug'] = slugify(kwargs['question'])
@@ -170,6 +175,7 @@ class Explainer(db.Model):
             },
             'tags': [tag.serialize() for tag in self.tags],
             'submitter_id': self.submitter_id,
+            'views': self.views,
         }
 
 
@@ -369,6 +375,12 @@ def handle_question_add_tag(explainer):
     return jsonify(explainer.serialize())
 
 
+def handle_question_view(explainer):
+    explainer.views += 1
+    db.session.commit()
+    return jsonify(explainer.serialize())
+
+
 @app.route('/api/question/<explainer_id>', methods=['GET', 'POST'])
 def view_api_single_question(explainer_id):
     explainer = Explainer.get(explainer_id)
@@ -396,6 +408,8 @@ def view_api_single_question(explainer_id):
             return handle_question_approve(explainer)
         elif action == 'add_tag':
             return handle_question_add_tag(explainer)
+        elif action == 'view':
+            return handle_question_view(explainer)
         else:
             return jsonify({'error': 'Unsupported action'}), 400
 

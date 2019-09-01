@@ -5,6 +5,14 @@ import { Link } from "react-router-dom";
 import { explainerShape } from './shapes.js';
 import ExplainerTags from './ExplainerTags.jsx';
 
+const Views = ({ explainer }) => {
+    return (
+        <span className="badge badge-light mx-2">
+          <i className="far fa-eye"></i> {explainer.views}
+        </span>
+    );
+};
+
 class ExplainerList extends React.Component {
     constructor(props) {
         super(props);
@@ -12,11 +20,13 @@ class ExplainerList extends React.Component {
 
     render() {
         return (
-            <ul>
+            <ul className="list-unstyled">
               {this.props.explainers.map(explainer => (
                   <li key={explainer.id}>
+                    <Views explainer={explainer} />
                     <Link to={explainer.prettyUrl}>{explainer.question}</Link>
                     <ExplainerTags explainer={explainer}
+                                   subdued={true}
                                    style={{marginLeft: "10px",
                                            position: "relative",
                                            bottom: "1px"}}

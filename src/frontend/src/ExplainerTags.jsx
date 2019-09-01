@@ -63,7 +63,8 @@ class ExplainerTag extends React.Component {
         }
         return (
             <span style={{...this.props.style}}>
-              <TagsList tags={explainer.tags} />
+              <TagsList tags={explainer.tags}
+                        subdued={this.props.subdued} />
               {addStuff}
             </span>
         );
@@ -74,10 +75,12 @@ ExplainerTag.propTypes = {
     explainer: explainerShape.isRequired,
     onAdd: PropTypes.func,
     style: PropTypes.object,
+    subdued: PropTypes.bool,
 };
 
 ExplainerTag.defaultProps = {
     style: {},
+    subdued: false,
 };
 
 export default ExplainerTag;

@@ -11,13 +11,16 @@ class TagsList extends React.Component {
     }
 
     render() {
+        const classes = this.props.subdued
+                      ? "badge badge-pill badge-light"
+                      : "badge badge-pill badge-info";
         return (
             <span>
               {this.props.tags.map(tag => (
                   <Link key={tag.id}
                         to={urls.pretty.tag(tag)}
                         style={{margin: "0 2px"}}
-                        className="badge badge-pill badge-info">{tag.text}</Link>
+                        className={classes}>{tag.text}</Link>
               ))}
             </span>
         );
@@ -26,6 +29,11 @@ class TagsList extends React.Component {
 
 TagsList.propTypes = {
     tags: PropTypes.arrayOf(tagShape).isRequired,
+    subdued: PropTypes.bool,
+};
+
+TagsList.defaultProps = {
+    subdued: false,
 };
 
 export default TagsList;

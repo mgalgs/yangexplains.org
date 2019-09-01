@@ -40,13 +40,14 @@ class Explainer extends React.Component {
 
     async componentDidMount() {
         if (!this.props.explainer) {
-            const [data, rsp] = await storage.fetchById(this.props.id);
+            const [explainer, rsp] = await storage.fetchById(this.props.id);
             if (!rsp.ok) {
                 /* TODO: toastify! */
-                this.setState({error: data.error});
+                this.setState({error: explainer.error});
                 return;
             }
-            this.setState({explainer: data});
+            this.setState({explainer});
+            storage.viewStatExplainer(explainer);
         }
 
         this.refreshAddThis();
@@ -119,8 +120,8 @@ class Explainer extends React.Component {
         player.playVideo();
     }
 
-    async onApproveClick(explainer) {
-        const [data, rsp] = await yangPost(explainer.apiUrl, {action: 'approve'});
+    async onApproveClick() {
+        const [data, rsp] = await yangPost(this.state.explainer.apiUrl, {action: 'approve'});
         if (!rsp.ok) {
             alert("Something went wrong, please try again");
             return;
