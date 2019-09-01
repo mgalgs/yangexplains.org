@@ -4,7 +4,6 @@ import MetaTags from 'react-meta-tags';
 import { Link } from "react-router-dom";
 
 import storage from './storage.js';
-import { getTagUrl } from './urls.js';
 import ExplainerList from './ExplainerList.jsx';
 import TagsList from './TagsList.jsx';
 

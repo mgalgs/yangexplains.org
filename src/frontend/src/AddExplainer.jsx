@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 
 import { yangPost } from './network.js';
-import { getExplainerUrl } from './urls.js';
+import urls from './urls.js';
 import Explainer from './Explainer.jsx';
 import storage from './storage.js';
 
@@ -103,7 +103,7 @@ class AddExplainer extends React.Component {
             return;
         }
         storage.invalidateCaches();
-        this.props.history.push(getExplainerUrl(data));
+        this.props.history.push(urls.pretty.explainer(data));
     }
 
     recomputePreview() {

@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 
 import storage from './storage.js';
 import { yangPost } from './network.js';
-import { getExplainerUrl } from './urls.js';
+import urls from './urls.js';
 import { explainerShape } from './shapes.js';
 import ExplainerTags from './ExplainerTags.jsx';
 
@@ -32,7 +32,7 @@ class Explainer extends React.Component {
         if (this.props.includeShareButtons
             && typeof addthis !== 'undefined'
             && addthis.layers.refresh) {
-            addthis.update("share", "url", getExplainerUrl(this.state.explainer));
+            addthis.update("share", "url", this.state.explainer.prettyUrl);
             addthis.update("share", "title", this.state.explainer.question);
             addthis.layers.refresh();
         }
@@ -120,15 +120,13 @@ class Explainer extends React.Component {
     }
 
     async onApproveClick(explainer) {
-        const eid = this.state.explainer.id;
-        const [data, rsp] = await yangPost(`/api/question/${eid}`,
-                                           {action: 'approve'});
+        const [data, rsp] = await yangPost(explainer.apiUrl, {action: 'approve'});
         if (!rsp.ok) {
             alert("Something went wrong, please try again");
             return;
         }
         storage.invalidateCaches();
-        this.props.history.push(getExplainerUrl(data));
+        this.props.history.push(urls.pretty.explainer(data));
     }
 }
 

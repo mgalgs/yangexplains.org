@@ -1,18 +1,18 @@
-import { yangGet } from './network.js';
-import { getExplainerUrl } from './urls.js';
+import { yangGet, yangPost } from './network.js';
+import urls from './urls.js';
 
 const _cache = {};
 
 const _augmentExplainer = (explainer) => {
     explainer.isApproverOrSubmitter = YangConfig.isApprover
         || YangConfig.userId === explainer.submitter_id;
-    explainer.apiUrl = `/api/question/${explainer.id}`;
-    explainer.prettyUrl = getExplainerUrl(explainer);
+    explainer.apiUrl = urls.api.explainer(explainer);
+    explainer.prettyUrl = urls.pretty.explainer(explainer);
 };
 
 const storage = {
     fetchById: async (id) => {
-        const [data, rsp] = await yangGet(`/api/question/${id}`);
+        const [data, rsp] = await yangGet(urls.api.explainerById(id));
         _augmentExplainer(data);
         return [data, rsp];
     },
@@ -21,7 +21,7 @@ const storage = {
     },
     getAllExplainers: async () => {
         if (!_cache.hasOwnProperty('explainers')) {
-            const [data, rsp] = await yangGet(`/api/questions`);
+            const [data, rsp] = await yangGet(urls.api.allExplainers());
             if (rsp.ok) {
                 const explainers = data.questions;
                 for (const explainer of explainers)
@@ -38,7 +38,7 @@ const storage = {
         delete _cache.explainers;
     },
     getPendingExplainers: async () => {
-        const [data, rsp] = await yangGet(`/api/questions?pending=1`);
+        const [data, rsp] = await yangGet(urls.api.allPendingExplainers());
         if (!rsp.ok) {
             console.error("Couldn't fetch pendingExplainers :(");
             return [];
@@ -47,6 +47,9 @@ const storage = {
         for (const explainer of explainers)
             _augmentExplainer(explainer);
         return explainers;
+    },
+    viewStatExplainer: (explainer) => {
+        yangPost(explainer.apiUrl, {'action': 'view'});
     },
 };
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import storage from './storage.js';
 import { yangPost } from './network.js';
-import { getTagUrl } from './urls.js';
 import { explainerShape } from './shapes.js';
 import TagsList from './TagsList.jsx'
 

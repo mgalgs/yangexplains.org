@@ -9,7 +9,7 @@ import AddExplainer from './AddExplainer.jsx';
 import ManageApprovals from './ManageApprovals.jsx';
 import BrowseByTag from './BrowseByTag.jsx';
 import storage from './storage.js';
-import { getExplainerUrl } from './urls.js';
+import urls from './urls.js';
 
 const ExplainerById = ({ match }) => {
     const id = parseInt(match.params.id);
@@ -64,7 +64,7 @@ class SiteSearch extends React.Component {
     }
 
     onSuggestionSelected(event, { suggestion }) {
-        this.props.history.push(getExplainerUrl(suggestion));
+        this.props.history.push(urls.pretty.explainer(suggestion));
         this.setState({value: ''});
     }
 
