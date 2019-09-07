@@ -122,7 +122,7 @@ class MainApp extends React.Component {
               <Router>
                 <SiteHeader />
                 <div className="row">
-                  <div className="col-md-6 offset-md-3">
+                  <div className="col-md-6 offset-md-3 p-3 shadow-lg bg-white rounded-lg">
                     <div className="row">
                       <div className="col-lg-3 d-flex justify-content-center">
                         <Link className="btn btn-outline-info btn-sm d-lg-none mb-3" to="/a/add">Add Question</Link>
