@@ -93,12 +93,20 @@ class Explainer extends React.Component {
                 {question}
               </h3>
               {answer.videos.map((v, idx) => (
-                  <YouTube
-                      key={idx}
-                      className="embed-responsive-item"
-                      containerClassName="embed-responsive embed-responsive-16by9"
-                      videoId={v.videoId}
-                      onReady={(e) => {this.onVideoReady(e, v);}} />
+                  <div key={idx}>
+                    <YouTube
+                        className="embed-responsive-item"
+                        containerClassName="embed-responsive embed-responsive-16by9"
+                        videoId={v.videoId}
+                        onReady={(e) => {this.onVideoReady(e, v);}} />
+                    {v.description &&
+                     <div className="card bg-light my-3">
+                       <div className="card-body">
+                         <p className="card-text">{v.description}</p>
+                       </div>
+                     </div>
+                    }
+                  </div>
               ))}
               <ExplainerTags explainer={explainer}
                              onAdd={this.onTagAdd} />
