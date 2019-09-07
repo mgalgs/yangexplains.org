@@ -2,6 +2,7 @@ import os
 import json
 import csv
 import urllib
+import re
 
 import requests
 from oauthlib.oauth2 import WebApplicationClient
@@ -62,6 +63,34 @@ def get_or_create(session, model, **kwargs):
     session.add(instance)
     session.commit()
     return instance
+
+
+def normalize_youtube_timestamp(ts):
+    """
+    Takes a timestamp string that could either be a straight number of
+    seconds, or hour-minute-second encoded 01h03m42s, and returns the
+    straight number of seconds as a string.
+    """
+    if 's' not in ts:
+        return ts
+
+    parts = re.split(r'[hms]', ts)
+    nparts = len(parts)
+    if nparts == 2:
+        return parts[0]
+    elif nparts == 3:
+        minutes = parts[0]
+        seconds = parts[1]
+        return str((int(minutes) * 60) + int(seconds))
+    elif nparts == 4:
+        hours = parts[0]
+        minutes = parts[1]
+        seconds = parts[2]
+        return str((int(minutes) * 60 * 60) +
+                   (int(minutes) * 60) +
+                   int(seconds))
+
+    raise ValueError("Invalid youtube timestamp")
 
 
 class GoogleUser(db.Model):
@@ -513,7 +542,7 @@ def cmd_import_from_yl_csv(filename):
             tag.explainers.append(explainer)
 
         qsdict = urllib.parse.parse_qs(query)
-        start = qsdict.get('t', '0')
+        start = normalize_youtube_timestamp(qsdict.get('t', ['0'])[0])
 
         video = ExplainerVideo(
             explainer_id=explainer.id,
