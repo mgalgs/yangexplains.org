@@ -10,26 +10,31 @@ class TagsList extends React.Component {
         super(props);
 
         this.state = {
-            showAll: false,
+            maxTags: props.maxTags,
         };
 
         this.onExpandoClick = this.onExpandoClick.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({ maxTags: nextProps.maxTags });
+    }
+
     onExpandoClick(e) {
         e.preventDefault();
-        this.setState({showAll: true});
+        this.setState(prevState => ({maxTags: prevState.maxTags + 30}));
     }
 
     render() {
-        const { maxTags, tags, subdued } = this.props;
+        const { tags, subdued } = this.props;
+        const { maxTags } = this.state;
 
         const classes = subdued
                       ? "badge badge-pill badge-light"
                       : "badge badge-pill badge-info";
 
         let displayTags, showExpando;
-        if (this.state.showAll || maxTags >= tags.length) {
+        if (maxTags >= tags.length) {
             displayTags = tags;
             showExpando = false;
         } else {
