@@ -199,11 +199,7 @@ class Explainer(db.Model):
             'slug': self.slug,
             'pending': self.pending,
             'answer': {
-                'videos': [{
-                    "videoId": video.video_id,
-                    "start": video.start,
-                    "end": video.end,
-                } for video in self.videos],
+                'videos': [video.serialize() for video in self.videos],
             },
             'tags': [tag.serialize() for tag in self.tags],
             'submitter_id': self.submitter_id,
@@ -221,6 +217,14 @@ class ExplainerVideo(db.Model):
     start = db.Column(db.Text, nullable=False)
     end = db.Column(db.Text, nullable=False, default='')
     description = db.Column(db.Text, nullable=True)
+
+    def serialize(self):
+        return {
+            "videoId": self.video_id,
+            "start": self.start,
+            "end": self.end,
+            "description": self.description,
+        }
 
 
 # Flask-Login helper to retrieve a user from our db
