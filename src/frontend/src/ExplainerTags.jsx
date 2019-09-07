@@ -64,7 +64,8 @@ class ExplainerTag extends React.Component {
         return (
             <span style={{...this.props.style}}>
               <TagsList tags={explainer.tags}
-                        subdued={this.props.subdued} />
+                        subdued={this.props.subdued}
+                        maxTags={this.props.maxTags} />
               {addStuff}
             </span>
         );
@@ -76,11 +77,13 @@ ExplainerTag.propTypes = {
     onAdd: PropTypes.func,
     style: PropTypes.object,
     subdued: PropTypes.bool,
+    maxTags: PropTypes.number,
 };
 
 ExplainerTag.defaultProps = {
     style: {},
     subdued: false,
+    maxTags: 10,
 };
 
 export default ExplainerTag;

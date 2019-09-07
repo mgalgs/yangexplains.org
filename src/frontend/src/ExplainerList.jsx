@@ -27,6 +27,7 @@ class ExplainerList extends React.Component {
                     <Link to={explainer.prettyUrl}>{explainer.question}</Link>
                     <ExplainerTags explainer={explainer}
                                    subdued={true}
+                                   maxTags={5}
                                    style={{marginLeft: "10px",
                                            position: "relative",
                                            bottom: "1px"}}

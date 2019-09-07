@@ -49,7 +49,7 @@ class TagsList extends React.Component {
                <a href="#"
                   onClick={this.onExpandoClick}
                   className="ml-1 text-muted">
-                 <small>More</small>
+                 <small>{subdued ? '...' : 'More'}</small>
                </a>
               }
             </span>
