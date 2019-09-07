@@ -1,5 +1,7 @@
 import os
 import json
+import csv
+import urllib
 
 import requests
 from oauthlib.oauth2 import WebApplicationClient
@@ -14,6 +16,7 @@ from flask import (
     request,
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.exc import IntegrityError
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import (
@@ -187,7 +190,7 @@ class ExplainerVideo(db.Model):
     video_provider = db.Column(db.Text, nullable=False)
     video_id = db.Column(db.Text, nullable=False)
     start = db.Column(db.Text, nullable=False)
-    end = db.Column(db.Text, nullable=False)
+    end = db.Column(db.Text, nullable=False, default='')
     description = db.Column(db.Text, nullable=True)
 
 
@@ -461,3 +464,66 @@ def cmd_sync_questions_from_prod(url):
             nvideos += 1
 
     print(f"Synced {nquestions} questions and {nvideos} videos from {url}")
+
+
+@app.cli.command("import-from-yl-csv")
+@click.argument("filename")
+def cmd_import_from_yl_csv(filename):
+    """
+    The YangLinks folks have been kind enough to share a csv of their
+    dataset.  This command imports it into our database.
+    """
+    print(f"Will import questions from {filename}")
+
+    first_user = User.query.order_by(User.id).first()
+
+    with open(filename) as csvfile:
+        reader = csv.reader(csvfile)
+        data = [row for row in reader]
+
+    for row in data:
+        (last_edit, category, objection, response, link, tags) = row
+        ures = urllib.parse.urlparse(link)
+        netloc = ures.netloc.strip()
+        path = ures.path.strip()
+        video_id = path.lstrip('/')
+        query = ures.query.strip()
+        question = objection.strip()
+
+        if netloc != 'youtu.be':
+            print(f"Unsupported netloc: {netloc}. Skipping.")
+            continue
+
+        explainer = Explainer(
+            question=question,
+            pending=False,
+            submitter_id=first_user.id,
+        )
+        db.session.add(explainer)
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            print(f"Error during import {e}. Skipping")
+            continue
+
+        for tagtext in tags.split(','):
+            tagtext = tagtext.strip()
+            tag = get_or_create(db.session, Tag, text=tagtext)
+            tag.explainers.append(explainer)
+
+        qsdict = urllib.parse.parse_qs(query)
+        start = qsdict.get('t', '0')
+
+        video = ExplainerVideo(
+            explainer_id=explainer.id,
+            video_provider='youtube',
+            video_id=video_id,
+            start=start,
+            end='',
+            description=response,
+        )
+        db.session.add(video)
+        db.session.commit()
+
+        print(f"Imported Explainer: {explainer.serialize()}")
