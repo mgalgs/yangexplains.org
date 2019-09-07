@@ -21,18 +21,19 @@ const storage = {
     },
     getAllExplainers: async () => {
         if (!_cache.hasOwnProperty('explainers')) {
-            const [data, rsp] = await yangGet(urls.api.allExplainers());
-            if (rsp.ok) {
-                const explainers = data.questions;
-                for (const explainer of explainers)
-                    _augmentExplainer(explainer);
-                _cache.explainers = explainers;
-            } else {
-                console.error("Couldn't fetch explainers :(");
-                return [];
-            }
+            _cache.explainers = new Promise(async (resolve, reject) => {
+                const [data, rsp] = await yangGet(urls.api.allExplainers());
+                if (rsp.ok) {
+                    const explainers = data.questions;
+                    for (const explainer of explainers)
+                        _augmentExplainer(explainer);
+                    resolve(explainers);
+                } else {
+                    reject([]);
+                }
+            });
         }
-        return _cache.explainers;
+        return await _cache.explainers;
     },
     invalidateCaches: () => {
         delete _cache.explainers;
