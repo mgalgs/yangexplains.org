@@ -188,6 +188,7 @@ class ExplainerVideo(db.Model):
     video_id = db.Column(db.Text, nullable=False)
     start = db.Column(db.Text, nullable=False)
     end = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=True)
 
 
 # Flask-Login helper to retrieve a user from our db
