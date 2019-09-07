@@ -24,21 +24,27 @@ class Home extends React.Component {
     render() {
         const idToTag = {};
         const allTags = this.state.explainers
-                            .map(explainer => explainer.tags);
+                            .map(({tags, views}) => ({tags, views}));
         /* uniquify */
-        for (const tags of allTags)
-            for (const tag of tags)
-                idToTag[tag.id] = tag;
+        for (const tagInfo of allTags) {
+            for (const tag of tagInfo.tags) {
+                if (!idToTag.hasOwnProperty(tag.id))
+                    idToTag[tag.id] = {tag, views: 0};
+                idToTag[tag.id].views += tagInfo.views;
+            }
+        }
         /* and collect into an array */
         const uniqueTags = [];
-        for (const [tagId, tag] of Object.entries(idToTag))
-            uniqueTags.push(tag);
+        for (const [tagId, tagInfo] of Object.entries(idToTag))
+            uniqueTags.push({tag: tagInfo.tag, views: tagInfo.views});
+        const uniqueTagsSorted = uniqueTags.sort((a, b) => b.views - a.views)
+                                           .map(({ tag }) => tag);
 
         return (
             <div>
               <div className="mb-4">
                 <h5>Browse tags</h5>
-                <TagsList tags={uniqueTags} />
+                <TagsList tags={uniqueTagsSorted} />
               </div>
               <h5>Browse all questions</h5>
               <ExplainerList explainers={this.state.explainers} />
