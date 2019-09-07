@@ -16,16 +16,20 @@ const tagPretty = (tag) => {
     return `/tag/${tag.text}`;
 };
 
+const sanitize = (fn) => {
+    return (url) => encodeURI(fn(url));
+};
+
 const urls = {
     api: {
-        explainerById: explainerApiById,
-        explainer: explainerApi,
+        explainerById: sanitize(explainerApiById),
+        explainer: sanitize(explainerApi),
         allExplainers: () => '/api/questions',
         allPendingExplainers: () => '/api/questions?pending=1',
     },
     pretty: {
-        explainer: explainerPretty,
-        tag: tagPretty,
+        explainer: sanitize(explainerPretty),
+        tag: sanitize(tagPretty),
     },
 };
 
