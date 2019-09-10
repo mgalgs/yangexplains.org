@@ -49,7 +49,19 @@ class SiteSearch extends React.Component {
             return [];
 
         const suggestions = this.props.explainers.filter(
-            explainer => explainer.question.toLowerCase().indexOf(inputValue) !== -1
+            explainer => (
+                explainer
+                    .question
+                    .toLowerCase()
+                    .indexOf(inputValue) !== -1
+                ||
+                explainer
+                    .tags
+                    .map(t => t.text)
+                    .join(' ')
+                    .toLowerCase()
+                    .indexOf(inputValue) !== -1
+            )
         );
 
         this.setState({suggestions});
@@ -77,13 +89,24 @@ class SiteSearch extends React.Component {
             onChange: this.onSearchChange,
         };
 
+        const renderSuggestion = (explainer) => {
+            return (
+                <div>
+                  <h5>{explainer.question}</h5>
+                  {explainer.tags && explainer.tags.length > 0 &&
+                   explainer.tags.map(t => <span key={t.id} className="badge badge-pill badge-light">{t.text}</span>)
+                  }
+                </div>
+            );
+        };
+
         return <Autosuggest
                    suggestions={suggestions}
                    onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
                    onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                    onSuggestionSelected={this.onSuggestionSelected}
                    getSuggestionValue={explainer => explainer.question}
-                   renderSuggestion={explainer => <div>{explainer.question}</div> }
+                   renderSuggestion={renderSuggestion}
                    inputProps={inputProps}
         />;
     }
