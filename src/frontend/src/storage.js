@@ -8,6 +8,7 @@ const _augmentExplainer = (explainer) => {
         || YangConfig.userId === explainer.submitter_id;
     explainer.apiUrl = urls.api.explainer(explainer);
     explainer.prettyUrl = urls.pretty.explainer(explainer);
+    return explainer;
 };
 
 const storage = {
@@ -17,7 +18,7 @@ const storage = {
         return [data, rsp];
     },
     augmentExplainer: (explainer) => {
-        _augmentExplainer(explainer);
+        return _augmentExplainer(explainer);
     },
     getAllExplainers: async () => {
         if (!_cache.hasOwnProperty('explainers')) {

@@ -26,6 +26,7 @@ class Explainer extends React.Component {
         this.onApproveClick = this.onApproveClick.bind(this);
         this.refreshAddThis = this.refreshAddThis.bind(this);
         this.onTagAdd = this.onTagAdd.bind(this);
+        this.onTagRemove = this.onTagRemove.bind(this);
     }
 
     refreshAddThis() {
@@ -109,7 +110,8 @@ class Explainer extends React.Component {
                   </div>
               ))}
               <ExplainerTags explainer={explainer}
-                             onAdd={this.onTagAdd} />
+                             onAdd={this.onTagAdd}
+                             onRemove={this.onTagRemove} />
               {/* Go to www.addthis.com/dashboard to customize your tools */}
               {this.props.includeShareButtons &&
                <div className="addthis_inline_share_toolbox mt-3" />
@@ -119,6 +121,10 @@ class Explainer extends React.Component {
     }
 
     onTagAdd(explainer) {
+        this.setState({explainer});
+    }
+
+    onTagRemove(explainer) {
         this.setState({explainer});
     }
 

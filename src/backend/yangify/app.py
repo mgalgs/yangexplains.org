@@ -412,6 +412,16 @@ def handle_question_add_tag(explainer):
     return jsonify(explainer.serialize())
 
 
+def handle_question_remove_tag(explainer):
+    tag_id = request.json.get("tag_id")
+    if not tag_id:
+        return jsonify({'error': 'tag_id is required'}), 400
+    tag = get_or_create(db.session, Tag, id=tag_id)
+    tag.explainers.remove(explainer)
+    db.session.commit()
+    return jsonify(explainer.serialize())
+
+
 def handle_question_view(explainer):
     explainer.views += 1
     db.session.commit()
@@ -445,6 +455,8 @@ def view_api_single_question(explainer_id):
             return handle_question_approve(explainer)
         elif action == 'add_tag':
             return handle_question_add_tag(explainer)
+        elif action == 'remove_tag':
+            return handle_question_remove_tag(explainer)
         elif action == 'view':
             return handle_question_view(explainer)
         else:

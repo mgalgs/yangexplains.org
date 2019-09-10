@@ -64,6 +64,8 @@ class ExplainerTag extends React.Component {
         return (
             <span style={{...this.props.style}}>
               <TagsList tags={explainer.tags}
+                        boundExplainer={explainer}
+                        onRemove={this.props.onRemove}
                         subdued={this.props.subdued}
                         maxTags={this.props.maxTags} />
               {addStuff}
@@ -75,6 +77,7 @@ class ExplainerTag extends React.Component {
 ExplainerTag.propTypes = {
     explainer: explainerShape.isRequired,
     onAdd: PropTypes.func,
+    onRemove: PropTypes.func,
     style: PropTypes.object,
     subdued: PropTypes.bool,
     maxTags: PropTypes.number,

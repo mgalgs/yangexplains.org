@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 
-import { tagShape } from './shapes.js';
+import { tagShape, explainerShape } from './shapes.js';
 import urls from './urls.js';
+import { yangPost } from './network.js';
+import storage from './storage.js';
 
 class TagsList extends React.Component {
     constructor(props) {
@@ -25,8 +27,19 @@ class TagsList extends React.Component {
         this.setState(prevState => ({maxTags: prevState.maxTags + 30}));
     }
 
+    async onRemoveClick(tag, e) {
+        e.preventDefault();
+        const explainer = this.props.boundExplainer;
+        const [newExplainer, rsp] = await yangPost(explainer.apiUrl, {
+            'action': 'remove_tag',
+            'tag_id': tag.id,
+        });
+        if (rsp.ok && this.props.onRemove)
+            this.props.onRemove(storage.augmentExplainer(newExplainer));
+    }
+
     render() {
-        const { tags, subdued } = this.props;
+        const { tags, subdued, boundExplainer } = this.props;
         const { maxTags } = this.state;
 
         const classes = subdued
@@ -45,10 +58,18 @@ class TagsList extends React.Component {
         return (
             <span>
               {displayTags.map(tag => (
-                  <Link key={tag.id}
-                        to={urls.pretty.tag(tag)}
-                        style={{margin: "0 2px"}}
-                        className={classes}>{tag.text}</Link>
+                  <span key={tag.id}>
+                    <Link to={urls.pretty.tag(tag)}
+                          style={{margin: "0 2px"}}
+                          className={classes}>
+                      {tag.text}
+                    </Link>
+                    {boundExplainer && boundExplainer.isApproverOrSubmitter && !subdued &&
+                     <a href="#"
+                        onClick={this.onRemoveClick.bind(this, tag)}
+                     >&times;</a>
+                    }
+                  </span>
               ))}
               {showExpando &&
                <a href="#"
@@ -66,6 +87,8 @@ TagsList.propTypes = {
     tags: PropTypes.arrayOf(tagShape).isRequired,
     subdued: PropTypes.bool,
     maxTags: PropTypes.number,
+    boundExplainer: explainerShape,
+    onRemove: PropTypes.func,
 };
 
 TagsList.defaultProps = {
